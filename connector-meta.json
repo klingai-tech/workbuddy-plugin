@@ -1,0 +1,21 @@
+{
+  "name": "Kling AI",
+  "name_zh": "可灵 AI",
+  "name_en": "Kling AI",
+  "description": "Create and monitor Kling AI images and videos through MCP.",
+  "description_zh": "通过 MCP 创建和查询可灵 AI 图片与视频生成任务。",
+  "description_en": "Create and monitor Kling AI images and videos through MCP.",
+  "source": "kling-ai",
+  "type": "mcp",
+  "version": "1.0.0",
+  "examples_zh": [
+    "画一只坐在霓虹屋顶上的赛博朋克风格猫",
+    "制作一个 5 秒的电影感视频：夕阳映照海边，镜头轻柔移动",
+    "制作一条无线耳机产品宣传视频：干净的影棚灯光，镜头缓慢环绕"
+  ],
+  "examples_en": [
+    "Generate a cinematic 16:9 poster",
+    "Turn this image into a 5-second 720p video",
+    "Check the current status of a Kling generationId"
+  ]
+}
