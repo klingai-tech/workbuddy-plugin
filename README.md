@@ -1,36 +1,42 @@
-# kling-ai
+# Kling AI for WorkBuddy
 
-Generate and monitor **Kling AI** images and videos right inside your chat, through Kling's official OAuth-protected MCP server.
+Kling AI connects WorkBuddy to the official OAuth-protected Kling MCP service
+for image and video creation.
 
-## What it does
+The connector uses the China Kling MCP endpoint configured in `mcp.json`:
+`https://klingai.com/mcp`.
 
-- Text-to-image & image-to-image
-- Text-to-video & image-to-video (single and multi-shot)
-- Check your remaining credits and task status
-- Automatically checks task status until the generation completes or fails
+## Capabilities
 
-## Install & authorize
+- Text-to-image and image-to-image generation
+- Text-to-video and image-to-video generation
+- Credit and task-status queries
+- Generation progress tracking and result delivery
 
-1. Submit or import this Connector directory into WorkBuddy.
-2. Open your host's **MCP / plugin connection** panel, find `kling-ai`, and click **Trust / Connect**, then sign in to your Kling account to authorize.
-   Authorization uses OAuth — the skill never asks for an API key in chat.
+## Connect
 
-## How to use
+Install the connector from WorkBuddy, choose **Connect**, and complete the Kling
+OAuth flow in the browser. WorkBuddy manages authorization and refresh; no API
+key is required.
 
-Just describe what you want in natural language. The skill shows the final settings and waits for your confirmation before any credit-consuming generation.
+To switch accounts, disconnect the current account before connecting the intended
+account. Never paste credentials, tokens, or cookies into a conversation.
 
-- *"Generate a 16:9 cinematic poster: a glass teapot in a white studio."*
-- *"Turn this photo into a 5-second, 720p clip; keep the subject stable."*
-- *"Check the status of generationId <id>."*
+## Use
 
-After submitting, the skill automatically checks the task until it completes or fails, then returns the result for display.
+Describe the image or video you want in natural language. Kling AI submits one
+generation task and checks it at service-allowed intervals until it succeeds or
+fails. If the current turn ends first, it returns a **task number** that can be
+used to query the same task later.
 
-## Notes
+If credits are insufficient, recharge the Kling account and try again. Completed
+results include the primary image, video, or result link supplied by Kling.
+Temporary result links can be refreshed by querying the original task number;
+the work also remains available in the authorized account's Kling generation
+history.
 
-- Output links (images/videos) **expire after 24 hours** — download in time.
-- Each task is submitted **at most once** per confirmed intent; the skill never auto-retries.
-- Never expose tokens, cookies, or signed output links.
+See [README.zh-CN.md](./README.zh-CN.md) for Chinese documentation.
 
 ## License
 
-Released under the [MIT License](./LICENSE).
+[MIT](./LICENSE)
