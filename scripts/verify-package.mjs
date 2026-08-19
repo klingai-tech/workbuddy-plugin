@@ -19,7 +19,6 @@ const requiredFiles = [
   "icon.png",
   "README.md",
   "LICENSE",
-  "scripts/package-release.py",
   "skills/kling-ai-plugin/SKILL.md",
   "skills/kling-ai-plugin/references/prompt-examples.md",
   "skills/kling-ai-plugin/references/mcp-contract.md",
@@ -49,15 +48,13 @@ check(packageJson.private !== true, "release package must not be private");
 check(connector.version === packageJson.version, "connector version must match package version");
 check(connector.type === "mcp", "connector type must be mcp");
 check(connector.source === "kling-ai-plugin", "connector source must be kling-ai-plugin");
-check(connector.name === "可灵 AI", "connector name must identify the China package in Chinese");
-check(connector.name_zh === connector.name && typeof connector.name_en === "string" && connector.name_en.length > 0,
-  "localized connector names must include matching Chinese and non-empty English values");
+check(connector.name === "Kling AI", "connector name must match the China package metadata");
+check(connector.name_en === connector.name && typeof connector.name_zh === "string" && connector.name_zh.length > 0,
+  "localized connector names must include matching English and non-empty Chinese values");
 check(connector.description === packageJson.description, "connector description must match package description");
 check(connector.description_zh === packageJson.description_zh
-  && connector.description_zh === connector.description
-  && typeof connector.description_en === "string"
-  && connector.description_en.length > 0,
-"localized descriptions must include matching Chinese and non-empty English values");
+  && connector.description_en === connector.description,
+"localized descriptions must match the corresponding package and connector descriptions");
 check(mcp.mcpServers?.["kling-ai-plugin"]?.url === "https://klingai.com/mcp", "unexpected Kling MCP URL");
 check(mcp.mcpServers?.["kling-ai-plugin"]?.type === "http", "Kling MCP transport must be http");
 check(Object.keys(mcp.mcpServers ?? {}).join() === "kling-ai-plugin", "only kling-ai-plugin may be registered");
@@ -104,10 +101,14 @@ if (!existsSync(join(root, ".git"))) {
   check(macOSMetadata.length === 0, `release must not contain macOS metadata: ${macOSMetadata.join(", ")}`);
 }
 
-for (const name of ["kling-ai-plugin", "kling-ai-generate-image", "kling-ai-generate-video"]) {
-  const skill = readExisting(`skills/${name}/SKILL.md`);
+for (const { directory, name } of [
+  { directory: "kling-ai-plugin", name: "kling-ai" },
+  { directory: "kling-ai-generate-image", name: "kling-ai-generate-image" },
+  { directory: "kling-ai-generate-video", name: "kling-ai-generate-video" },
+]) {
+  const skill = readExisting(`skills/${directory}/SKILL.md`);
   check(skill.startsWith("---\n"), `${name} skill must have YAML frontmatter`);
-  check(skill.match(/^name:\s*(\S+)\s*$/m)?.[1] === name, `${name} skill name must match its directory`);
+  check(skill.match(/^name:\s*(\S+)\s*$/m)?.[1] === name, `${directory} skill must declare name ${name}`);
   check(/^description:\s*.+$/m.test(skill), `${name} skill must have a description`);
 }
 
