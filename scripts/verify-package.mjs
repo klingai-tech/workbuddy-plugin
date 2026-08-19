@@ -210,8 +210,8 @@ const englishUserFacingFiles = requiredFiles.filter((path) => path.endsWith(".md
 for (const path of englishUserFacingFiles) {
   check(!/\p{Script=Han}/u.test(readExisting(path)), `${path} must use English in the Global package`);
 }
-check(!read("package.json").includes("https://klingai.com/mcp")
-  && !read("connector-meta.json").includes("https://klingai.com/mcp"),
+check(!read("package.json").includes("https://kling.ai/mcp")
+  && !read("connector-meta.json").includes("https://kling.ai/mcp"),
 "Global package metadata must not reference the China endpoint");
 
 for (const path of requiredFiles.filter((path) => path.endsWith(".md"))) {
