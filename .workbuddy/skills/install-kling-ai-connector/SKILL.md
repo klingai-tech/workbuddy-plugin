@@ -1,6 +1,6 @@
 ---
 name: install-kling-ai-connector
-description: 安装/配置本项目（kling-ai-plugin 可灵 AI 连接器插件）到本地 WorkBuddy。当用户要求"安装这个连接器、把插件装到本地、mcp.json 配置"时使用。必须逐字照抄插件包内国内 mcp.json 的全部内容，禁止任何改名或美化。
+description: 安装/配置本项目（kling-ai-plugin 可灵 AI 连接器插件）到本地 WorkBuddy。当用户要求"安装这个连接器、把插件装到本地、mcp.json 配置"时使用。必须逐字照抄插件包内 mcp.json 的全部内容，禁止任何改名或美化。
 ---
 
 # Install Kling AI Connector（连接器包内版本）
@@ -11,14 +11,14 @@ description: 安装/配置本项目（kling-ai-plugin 可灵 AI 连接器插件�
 
 ## 铁律（用户明确要求，违反即返工）
 
-1. **逐字照抄**：`~/.workbuddy/mcp.json` 中 `mcpServers` 下的 Kling 条目，必须与本插件包内的国内 `mcp.json` **逐字符一致**——key 名必须是 `kling-ai-plugin`，`type`、`url`、`timeout` 等字段原样复制。
+1. **逐字照抄**：`~/.workbuddy/mcp.json` 中 `mcpServers` 下的 Kling 条目，必须与本插件包内的 `mcp.json` **逐字符一致**——key 名必须是 `kling-ai-plugin`，`type`、`url`、`timeout` 等字段原样复制。
 2. **禁止改名/美化**：不得把 `kling-ai-plugin` 简写成 `kling-ai`，不得调整任何字段值。服务标识符是插件管理与 OAuth token 关联的依据，改名会导致连接器页面对不上号。
 3. **只增不覆盖**：`~/.workbuddy/mcp.json` 已有其他服务器条目时必须保留，只合并本插件条目。
 4. 写完后重新 Read 本地文件，逐项比对确认一致。
 
 ## 安装流程
 
-### Step 1: 读取国内 MCP 模板
+### Step 1: 读取 MCP 模板
 
 1. Read `connector-meta.json` 确认插件身份（name 为 Kling AI / 可灵 AI）。
 2. Read 根目录 `mcp.json`，确认端点为 `https://klingai.com/mcp`。

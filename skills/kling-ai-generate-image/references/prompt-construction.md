@@ -1,50 +1,50 @@
-# Image prompt construction
+# 图像提示词构建
 
-## Prompt order
+## 提示词顺序
 
-Write prompts in this order:
+按以下顺序编写提示词：
 
-1. Destination and medium: product photo, editorial portrait, poster, thumbnail, campaign still.
-2. Subject and locked facts: identity, product geometry, exact colors, official logo or copy.
-3. Action or visual idea.
-4. Environment, time, weather, and atmosphere.
-5. Composition: ratio, framing, camera height, lens feel, focal hierarchy, negative space.
-6. Lighting and palette.
-7. Materials, texture, surface detail, and realism/stylization level.
-8. Constraints: subject count, forbidden changes, no extra text/watermark, safe-space requirements.
+1. 投放位置和媒介：产品照片、编辑人像、海报、缩略图、营销静帧。
+2. 主体和锁定事实：身份、产品结构、准确色彩、官方标志或文案。
+3. 动作或视觉创意。
+4. 环境、时间、天气和氛围。
+5. 构图：宽高比、取景、相机高度、镜头观感、视觉焦点层级、负空间。
+6. 光线和色彩。
+7. 材质、纹理、表面细节，以及写实或风格化程度。
+8. 约束：主体数量、禁止改动项、不得添加额外文字或水印、安全区域要求。
 
-## Reference manifest
+## 参考素材清单
 
-When multiple inputs are used, state their roles before the creative prompt:
+使用多项输入时，先说明它们的角色，再写创意提示词：
 
 ```text
-REFERENCE 1 = primary subject identity
-REFERENCE 2 = product geometry and label
-REFERENCE 3 = official logo; preserve exact shape and colors
+参考素材 1 = 主要主体的身份
+参考素材 2 = 产品结构和标签
+参考素材 3 = 官方标志；保留准确形状和色彩
 ```
 
-Do not use a style reference as an identity reference. Describe the transferable characteristics instead.
+不要把风格参考图当作身份参考图。应描述其中可以迁移的特征。
 
-## Exact text
+## 精确文字
 
-- Preserve user copy character-for-character.
-- Prefer generating a text-free base with deliberate copy-safe space when typography can be added by a deterministic design tool later.
-- If the user explicitly wants baked text, state the exact text once, request no other readable text, and warn that generated typography may need review.
+- 逐字保留用户提供的文案。
+- 如果之后可以使用确定性的设计工具添加文字，优先生成有意预留文案安全区域的无文字底图。
+- 如果用户明确要求把文字直接生成在图中，只写一次准确文案，要求不要出现其他可读文字，并提醒用户生成的文字排版可能需要复查。
 
-## Controlled variants
+## 受控变体
 
-Generate separate prompts rather than requesting a batch of near-duplicates. Keep locked facts identical and vary one axis:
+应分别生成提示词，不要请求一批几乎重复的图像。保持锁定事实完全一致，每次只改变一个维度：
 
-- concept: literal / human / metaphorical
-- camera: macro / medium / environmental wide
-- composition: centered / power-third / overhead
-- mood: bright commercial / premium restrained / energetic saturated
-- expression or action
+- 概念：直白展示 / 人物场景 / 隐喻表达
+- 镜头：微距 / 中景 / 环境广角
+- 构图：居中 / 三分法重点位置 / 俯拍
+- 情绪：明亮商业感 / 克制高级感 / 高饱和活力感
+- 表情或动作
 
-## Avoid
+## 避免
 
-- Empty praise such as “beautiful” without visual evidence.
-- Contradictory directions such as minimal and densely layered, or macro and full environmental wide.
-- Long negative lists that repeat the positive brief.
-- Unverified product claims, medical outcomes, prices, awards, certifications, or statistics.
-- Assuming a particular model or argument exists without checking the live schema.
+- 缺少视觉依据的空泛赞美，例如“漂亮”。
+- 互相冲突的指令，例如同时要求极简和密集分层，或者同时要求微距和完整环境广角。
+- 重复正向需求的冗长负面清单。
+- 未经验证的产品功效、医疗效果、价格、奖项、认证或统计数据。
+- 未检查实时模式定义，就假设某个模型或参数一定存在。

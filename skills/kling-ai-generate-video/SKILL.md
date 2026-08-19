@@ -1,69 +1,72 @@
 ---
 name: kling-ai-generate-video
-description: Plan and generate videos with the OAuth-protected remote Kling MCP server. Use for text-to-video, image-to-video, cinematic clips, product showcases, UGC-style ads, unboxing, explainers, presenter scenes, multi-shot stories, camera-motion studies, social ads, and animating an existing image. Use when the user asks to make, animate, storyboard, or generate a video, clip, commercial, reel, short, motion scene, or image-to-video result.
+description: 通过 WorkBuddy 中的 Kling AI 连接器生成电影级画质的视频。可灵擅长稳定的动作表现与叙事性镜头语言，适合产品展示、广告短片、社交媒体内容等动态视觉创作场景。支持文生视频与图生视频。
 ---
 
-# Kling AI Video Generation
+# Kling AI 视频生成
 
-Translate a user brief into a coherent Kling motion plan and one approved remote generation request. Use only live tools and schemas from the configured MCP at `https://klingai.com/mcp`.
+将用户需求转化为连贯的 Kling 动态方案和一条已批准的远程生成请求。仅使用在 `https://klingai.com/mcp` 配置的 MCP 所提供的实时工具和模式定义。
 
-## Contract
+## 使用约定
 
-- Use host-managed OAuth. Never request or expose API keys, tokens, cookies, authorization headers, or signed URLs.
-- A user request to generate authorizes one submission after materially missing inputs are resolved. Do not add a credit-cost warning or a separate confirmation step.
-- Submit once per approved intent. Never automatically retry a failed or ambiguous generation.
-- Discover live tools and schemas at runtime. Do not hard-code model names, input roles, duration values, or multi-shot fields from examples.
-- Upload attached media through the remote upload tool when required and preserve the exact returned reference.
+- 使用宿主管理的 OAuth。绝不请求或暴露 API key、token、cookie、授权头或签名 URL。
+- 用户提出生成请求，即表示在补齐会实质影响结果的缺失输入后，授权提交一次任务。不要增加积分消耗警告或单独的确认步骤。
+- 每个已批准的意图只提交一次。绝不自动重试失败或结果不明确的生成。
+- 在运行时发现实时工具和模式定义。不要根据示例硬编码模型名称、输入角色、时长值或多镜头字段。
+- 需要时，通过远程上传工具上传附带媒体，并保留准确的返回引用。
 
-## Workflow
+提交前阅读[完整 MCP 输入输出与当前模型参数快照](../kling-ai-plugin/references/mcp-contract.md)，并用当次 `tools/list` / `who_am_i` 覆盖快照中的动态值。
 
-1. Classify the request using the mode table below.
-2. Read [scene patterns](references/scene-patterns.md) for the matching format.
-3. Read [motion and shot planning](references/motion-and-shots.md) for camera choreography, image-to-video constraints, multi-shot continuity, or timed narration.
-4. Ask only for missing creative facts that materially change the result: duration, destination ratio, required references, narration/copy, or shot structure.
-5. Build a motion-first prompt describing subject action, camera action, environmental motion, timing, continuity, and protected elements.
-6. Call the selected live generation tool once when the request has enough information. Preserve `generationId` and any `taskTraceId`.
-7. If the submission is not terminal, poll its status at provider-allowed intervals until success or failure. On user cancellation or current-turn timeout, return the current state and task number.
-8. Provide the primary video or result link returned by Kling. Show `generationId` as **任务编号** and keep `taskTraceId` internal unless troubleshooting requires it.
+## 工作流程
 
-## Generation modes
+1. 使用下方模式表判断请求类型。
+2. 阅读与目标格式相匹配的[场景模式](references/scene-patterns.md)。
+3. 对于镜头调度、图生视频约束、多镜头连续性或定时旁白，阅读[运动与镜头规划](references/motion-and-shots.md)。
+4. 只询问会实质影响结果的创意缺失信息：时长、投放宽高比、必需参考素材、旁白或文案，或者镜头结构。
+5. 在满足生成模式、参考素材和所需时长的实时模型中，优先完整质量模型；只有用户明确要求草稿、快速或省灵感值时才优先极速、Turbo 或低成本模型。
+6. 构建一条以动态为中心的提示词，描述主体动作、镜头动作、环境运动、时间安排、连续性和受保护元素。把“电影感、高级、高质量”等抽象要求落实为镜头运动、光线、材质、景深、动作节奏和构图，不要只堆砌形容词。
+7. 信息足够后，只调用一次选定的实时生成工具。保留 `generationId` 及任何 `taskTraceId`。
+8. 如果提交未进入终态，按提供方允许的间隔轮询状态，直到成功或失败。若用户取消或当前轮次超时，返回当前状态和任务编号。
+9. 提供 Kling 返回的主视频或结果链接。将 `generationId` 显示为**任务编号**；除非故障排查需要，否则不对外显示 `taskTraceId`。
 
-| User intent | Mode | Required interpretation |
+## 生成模式
+
+| 用户意图 | 模式 | 必须采用的理解方式 |
 | --- | --- | --- |
-| 文生视频 / text-to-video | Generate | No source image controls the opening frame. Define the opening composition from text. |
-| 图生视频 / image-to-video | Image-to-video | One or more images control the first frame, last frame, identity/product reference, or visual reference. Assign each role explicitly. |
-| 多镜头 / storyboard | Single approved video plan | Split timing and continuity deliberately; do not submit one task per shot unless the user explicitly approves separate tasks. |
-| 查进度 / status | Read-only | Do not call a generation tool; query the existing task. |
+| 文生视频 / text-to-video | 生成 | 不使用源图控制首帧。根据文字定义开场构图。 |
+| 图生视频 / image-to-video | 图生视频 | 一张或多张图像用于控制首帧、尾帧、身份或产品参考，或者视觉参考。明确指定每项输入的角色。 |
+| 动作控制 / motion control | 动作迁移 | 主体图必填；动作库 `motionId` 与动作来源视频二选一，其余参数以实时模型定义为准。 |
+| 多镜头 / storyboard | 单条已批准的视频方案 | 有意识地划分时间和连续性；除非用户明确批准生成独立任务，否则不要为每个镜头分别提交任务。 |
+| 查进度 / status | 只读 | 不调用生成工具；查询已有任务。 |
 
-For image-to-video, distinguish these roles before submission:
+对于图生视频，提交前应区分以下角色：
 
-- **first frame:** lock opening composition and animate forward from it;
-- **last frame:** define the intended destination only when the live schema supports it;
-- **identity/product reference:** preserve subject facts without assuming the input is the first frame;
-- **style reference:** transfer only named visual traits, not identity or composition.
+- **首帧：**锁定开场构图，并以它为起点向后生成动态；
+- **尾帧：**只有在实时模式定义支持时，才用于规定目标画面；
+- **身份或产品参考：**保留主体事实，但不假设输入就是首帧；
+- **风格参考：**只迁移明确指定的视觉特征，不迁移身份或构图。
 
-Do not silently fall back from 图生视频 to 文生视频 when upload, reference count, or schema validation fails. Report the limitation and let the user revise the request.
+当上传、参考图数量或模式定义校验失败时，不要静默地从图生视频降级为文生视频。报告限制，并让用户修改请求。
 
-Before calling the tool, check the selected mode, reference roles, duration,
-resolution, shot structure, and protected elements internally. Do not show a
-pre-submission process message unless you need the user to clarify a missing
-creative requirement.
+调用工具前，在内部检查所选模式、参考图角色、时长、分辨率、镜头结构和受保护元素。除非需要用户澄清缺失的创意要求，否则不要显示提交前的过程消息。
 
-## Defaults
+## 质量优先的默认策略
 
-- Use `720p`, `5` seconds, and `16:9` only when the user gave no alternative and the live schema supports them.
-- For image-to-video, derive composition from the source and avoid passing a ratio unless required.
-- Prefer one continuous shot for a single moment. Use multi-shot only for explicit narrative progression, multiple locations/times, or a requested sequence.
-- Keep the first generation focused. Do not add narration, on-screen copy, extra characters, or product claims that the user did not request.
+- 普通成片默认使用 `1080p`；高质量、商用、大屏或后期需求在实时模型支持时使用 `4k`；只有草稿、快速或成本优先时使用 `720p`，或者目标模式仅支持 `720p`。不要把模型更高的默认分辨率主动降级。
+- 一个动作或一个镜头使用 `5` 秒；对白、演唱、完整产品动作或两个相连节拍优先 `10` 秒；复杂叙事只在实时模式支持且确有必要时使用更长时长。选择能完成内容的最短时长。
+- 文生视频根据投放位置选择画幅：竖版短视频用 `9:16`，方形信息流用 `1:1`，横版广告、网页或 YouTube 用 `16:9`；没有投放上下文时才用 `16:9`。
+- 对于图生视频，根据源图推导构图；除非工具要求，否则不要传入宽高比。
+- 单一时刻优先使用一个连续镜头。只有在明确存在叙事推进、多个地点或时间，或者用户要求一个序列时，才使用多镜头。
+- 保持首次生成目标集中。不要添加用户未要求的旁白、画面文字、额外角色或产品功效。
 
-## Quality gate
+## 质量门禁
 
-Before submission, check that the subject action can fit the duration, camera instructions do not conflict, first/last frame intent is clear, reference identity/product geometry is protected, and multi-shot durations form a coherent whole. For ads and explainers, ensure every shot has a single communication job.
+提交前，检查主体动作能否在指定时长内完成、镜头指令是否冲突、首尾帧意图是否清晰、参考身份或产品结构是否受到保护，以及多镜头时长能否组成连贯整体。对于广告和讲解视频，确保每个镜头只承担一项传播任务。
 
-## Failure behavior
+## 失败处理
 
-- Authorization failure: direct the user to WorkBuddy's native MCP connection flow.
-- Invalid argument/model: refresh the live schema and revise only the unsupported field.
-- Insufficient credits: tell the user to recharge and stop. Do not retry automatically.
-- Lost response: treat task creation as unknown and query existing tasks before any new submission.
-- Provider failure: report the message and preserve IDs; never resubmit automatically.
+- 授权失败：引导用户使用 WorkBuddy 原生 MCP 连接流程。
+- 参数或模型无效：刷新实时模式定义，只修改不受支持的字段。
+- 积分不足：告知用户充值并停止。不要自动重试。
+- 响应丢失：将任务是否创建视为未知；在任何新提交前，先查询已有任务。
+- 提供方失败：报告消息并保留各项 ID；绝不自动重新提交。

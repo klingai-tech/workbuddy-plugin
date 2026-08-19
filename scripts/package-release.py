@@ -65,7 +65,7 @@ def validate_zip(path, expected_names):
         if corrupt:
             raise RuntimeError(f"Archive CRC check failed: {corrupt}")
 
-        with tempfile.TemporaryDirectory(prefix="kling-workbuddy-verify-") as temporary:
+        with tempfile.TemporaryDirectory(prefix="kling-workbuddy-cn-verify-") as temporary:
             archive.extractall(temporary)
             node = shutil.which("node")
             if not node:
@@ -84,9 +84,9 @@ def main():
     expected_names = [name for name, _ in files]
 
     DIST.mkdir(exist_ok=True)
-    output = DIST / f"kling-workbuddy-v{version}.zip"
+    output = DIST / f"kling-workbuddy-cn-v{version}.zip"
 
-    with tempfile.NamedTemporaryFile(prefix="kling-workbuddy-", suffix=".zip", dir=DIST, delete=False) as temporary:
+    with tempfile.NamedTemporaryFile(prefix="kling-workbuddy-cn-", suffix=".zip", dir=DIST, delete=False) as temporary:
         temporary_path = Path(temporary.name)
 
     try:

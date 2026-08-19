@@ -1,70 +1,74 @@
-# Motion and shot planning
+# 运动与镜头规划
 
-## Motion-first prompt order
+## 以动态为中心的提示词顺序
 
-1. Format and duration intent.
-2. Opening frame and subject placement.
-3. Primary subject action with beginning, progression, and end beat.
-4. Camera action and speed.
-5. Environmental motion and physical effects.
-6. Lighting, palette, lens feel, and temporal atmosphere.
-7. Continuity locks: identity, wardrobe, product geometry, logo, architecture, screen direction.
-8. Constraints: no extra subjects, no morphing, no unsolicited text or watermark.
+1. 格式和时长意图。
+2. 开场画面和主体位置。
+3. 主要主体动作，包括开始、发展和收尾节拍。
+4. 镜头动作和速度。
+5. 环境运动和物理特效。
+6. 光线、色彩、镜头观感和时间氛围。
+7. 连续性锁定项：身份、服装、产品结构、标志、建筑、画面方向。
+8. 约束：不得增加主体、不得变形、不得擅自添加文字或水印。
 
-## Camera vocabulary
+## 镜头术语
 
-- `locked-off`: observation, product detail, graphic composition
-- `slow push-in`: emphasis, intimacy, reveal of detail
-- `pull-back reveal`: expand context or scale
-- `lateral tracking`: follow motion while preserving profile/geography
-- `orbit`: dimensional product/character reveal; keep speed restrained
-- `crane rise/drop`: establish or conclude with scale
-- `handheld follow`: urgency or UGC authenticity; specify controlled versus energetic
-- `whip pan`: transition or impact; use sparingly and only with a clear landing subject
+- `locked-off`（固定机位）：观察、产品细节、图形化构图
+- `slow push-in`（缓慢推近）：强调、亲密感、揭示细节
+- `pull-back reveal`（后拉揭示）：扩展环境或尺度
+- `lateral tracking`（横向跟拍）：在保持侧面关系或空间方位的同时跟随运动
+- `orbit`（环绕）：立体展示产品或角色；速度应保持克制
+- `crane rise/drop`（升降镜头）：以空间尺度建立或收束画面
+- `handheld follow`（手持跟拍）：表现紧迫感或 UGC 真实感；应明确是稳定克制还是富有动感
+- `whip pan`（甩镜）：用于转场或冲击；谨慎使用，并明确镜头最终落到哪个主体
 
-Do not stack several camera verbs in a five-second shot.
+不要在一个五秒镜头中叠加多个镜头动作动词。
 
-## Short-duration fit
+## 短时长适配
 
-- 5 seconds: one action and one camera move.
-- 10 seconds: one action with setup/payoff, or two simple connected beats.
-- 15 seconds: compact three-beat sequence when supported, otherwise one developed continuous shot.
+- 5 秒：一个动作和一次镜头运动。
+- 10 秒：一个包含铺垫和结果的动作，或两个简单且相连的节拍。
+- 15 秒：支持时可使用紧凑的三节拍序列，否则采用一个充分发展的连续镜头。
 
-Treat these as planning heuristics, not provider capabilities; use only duration values accepted by the live schema.
+这些是规划经验，不代表提供方能力；只能使用实时模式定义接受的时长值。
 
-## Multi-shot template
+## 多镜头模板
 
 ```text
-SHOT 1 — <duration>: <framing>; <single story job>; <subject action>; <camera action>.
-Continuity: <identity/product/location anchors>.
+镜头 1 — <时长>：<取景>；<单一叙事任务>；<主体动作>；<镜头动作>。
+连续性：<身份/产品/地点锚点>。
 
-SHOT 2 — <duration>: <framing>; <new story job>; <subject action>; <camera action>.
-Continuity: preserve <anchors>; transition via <match/action/screen direction>.
+镜头 2 — <时长>：<取景>；<新的叙事任务>；<主体动作>；<镜头动作>。
+连续性：保留<锚点>；通过<匹配/动作/画面方向>转场。
 ```
 
-Keep the total duration consistent. Each shot should add information rather than repeat a prettier angle.
+总时长应保持一致。每个镜头都应增加新信息，而不是重复一个更好看的角度。
 
-## Reference handling
+## 参考素材处理
 
-- First-frame input: preserve composition and animate within it.
-- Multiple references: identify each role explicitly; do not treat all images as interchangeable style inputs.
-- Character continuity: lock face, age presentation, hair, wardrobe, proportions, and distinctive features.
-- Product continuity: lock dimensions, materials, label spelling, logo placement, and moving-part behavior.
+- 首帧输入：保留构图，并在其中生成动态。
+- 多项参考素材：明确标注每项素材的角色；不要把所有图像都视为可互换的风格输入。
+- 角色连续性：锁定面孔、年龄呈现、发型、服装、比例和显著特征。
+- 产品连续性：锁定尺寸、材质、标签文字、标志位置和活动部件的运动方式。
 
-## Ads and explainers
+## 动作控制素材
 
-Assign one communication job per beat:
+- 主体图中的人物或动物应清晰可见，身体范围尽量与动作来源视频一致。
+- 动作来源视频只保留一个连续镜头，避免切镜、遮挡、过快动作和多人争抢主体。
+- 官网当前建议动作视频为 3–30 秒、短边至少 340px、长边不超过 3850px；如果实时 MCP schema 更严格，服从更严格限制。
+- `motion_control` 的主体 `image` 必填，动作库 `motionId` 与动作来源 `video` 必须二选一。人物朝向、分辨率、原声保留等字段只使用 `who_am_i` 当前模型声明的名称和值域。
 
-- hook: earn attention without a false claim
-- context: show the problem or setting
-- proof: demonstrate a real product/action/detail
-- payoff: hero result or supplied message
+## 广告与讲解视频
 
-Do not invent performance claims, user testimony, statistics, pricing, awards, certifications, or regulatory statements.
+为每个节拍分配一项传播任务：
 
-## Submission check
+- 吸引点：在不虚假宣传的前提下吸引注意
+- 语境：展示问题或环境
+- 证据：演示真实的产品、动作或细节
+- 收束：展示主视觉结果或用户提供的信息
 
-Check duration, resolution, ratio, shot structure, and protected elements
-internally before submission. Do not show a pre-submission process message,
-credit warning, or separate confirmation unless a creative requirement is
-missing and the user must clarify it.
+不要虚构性能宣传、用户证言、统计数据、价格、奖项、认证或监管声明。
+
+## 提交检查
+
+提交前，在内部检查时长、分辨率、宽高比、镜头结构和受保护元素。除非缺少必须由用户澄清的创意要求，否则不要显示提交前的过程消息、积分警告或单独的确认步骤。

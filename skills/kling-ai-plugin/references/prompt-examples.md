@@ -1,4 +1,4 @@
-# Kling AI prompt and usage examples
+# Kling AI 提示词与用法示例
 
 ## 建议提示词
 
@@ -6,50 +6,48 @@
 - 制作一段 5 秒电影感视频：机甲战士从高空重砸地面，冲击波瞬间震开碎石与尘雾，镜头快速推近，充满力量感
 - 制作一条 15 秒运动鞋营销短片：街头开场抓住注意力，三秒切出产品特写与穿着动态，结尾落在鞋身细节特写
 
-## Natural-language requests
+## 自然语言请求
 
-Text-to-video:
+文生视频：
 
 > 用可灵生成一个 5 秒、16:9 的电影感视频：雨夜便利店门口，一辆复古摩托缓慢停下，镜头从远景平稳推近。
 
-Image-to-video:
+图生视频：
 
 > 用我附上的图片做 5 秒图生视频。人物身份、五官和服装保持一致，只让镜头缓慢从左侧环绕到正面，720p。
 
-Multi-shot video:
+多镜头视频：
 
 > 生成一条多镜头产品片：先用全景建立场景，再推近产品并从侧面展示，最后定格品牌细节，镜头衔接自然。时长和分镜参数使用当前可灵支持的值。
 
-Text-to-image:
+文生图：
 
 > 用可灵生成一张 16:9 海报主视觉：极简白色摄影棚，一只透明玻璃茶壶，柔和侧光，保留右侧标题留白。
 
-Complete generation request:
+完整生成请求：
 
 > 用可灵生成 5 秒、16:9、720p 的单镜头视频：雨夜便利店门口，一辆复古摩托缓慢停下。生成后返回任务编号。
 
-Status check:
+状态查询：
 
 > 查询这个可灵任务编号的当前状态，只查一次，不要循环轮询。
 
-## Prompt construction
+## 提示词构建
 
-Prefer concrete direction in this order:
+优先按以下顺序提供具体指令：
 
-1. subject and setting
-2. action or transformation
-3. camera and shot structure
-4. lighting and visual style
-5. identity or consistency constraints
-6. exclusions only when they prevent a likely failure
+1. 主体和环境
+2. 动作或变化
+3. 镜头和分镜结构
+4. 光线和视觉风格
+5. 身份或一致性约束
+6. 仅在能防止可能发生的失败时添加排除项
 
-Avoid long lists of repeated negatives. For image-to-video, state what must
-remain stable and what is allowed to move.
+避免罗列重复而冗长的负面提示。对于图生视频，应说明哪些内容必须保持稳定，以及哪些内容允许运动。
 
-## User-facing submission result
+## 面向用户的提交结果
 
-Do not add a credit warning or a separate confirmation step. After submission,
-use one compact block:
+不要增加积分警告或单独的确认步骤。提交后使用一个简洁的信息块：
 
 ```text
 完成后返回主结果。结果链接可能是临时签名地址；地址失效不代表作品丢失，
