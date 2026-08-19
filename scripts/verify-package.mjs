@@ -19,7 +19,6 @@ const requiredFiles = [
   "icon.png",
   "README.md",
   "LICENSE",
-  "scripts/package-release.py",
   "skills/kling-ai-plugin/SKILL.md",
   "skills/kling-ai-plugin/references/prompt-examples.md",
   "skills/kling-ai-plugin/references/mcp-contract.md",
@@ -49,16 +48,20 @@ check(packageJson.private !== true, "release package must not be private");
 check(connector.version === packageJson.version, "connector version must match package version");
 check(connector.type === "mcp", "connector type must be mcp");
 check(connector.source === "kling-ai-plugin", "connector source must be kling-ai-plugin");
-check(connector.name === "可灵 AI", "connector name must identify the China package in Chinese");
-check(connector.name_zh === connector.name && typeof connector.name_en === "string" && connector.name_en.length > 0,
-  "localized connector names must include matching Chinese and non-empty English values");
-check(connector.description === packageJson.description, "connector description must match package description");
-check(connector.description_zh === packageJson.description_zh
-  && connector.description_zh === connector.description
-  && typeof connector.description_en === "string"
-  && connector.description_en.length > 0,
-"localized descriptions must include matching Chinese and non-empty English values");
-check(mcp.mcpServers?.["kling-ai-plugin"]?.url === "https://klingai.com/mcp", "unexpected Kling MCP URL");
+check(connector.name === "Kling AI", "connector name must identify the Global package in English");
+check(connector.name_en === connector.name && typeof connector.name_zh === "string" && connector.name_zh.length > 0,
+  "localized connector names must include matching English and non-empty Chinese values");
+check(typeof connector.description === "string" && connector.description.length > 0,
+  "connector must include a primary English description");
+check(connector.description_en === connector.description
+  && typeof connector.description_zh === "string"
+  && connector.description_zh.length > 0,
+"localized descriptions must include matching English and non-empty Chinese values");
+check(typeof packageJson.description === "string" && packageJson.description.length > 0,
+  "package must include a description");
+check(typeof packageJson.description_zh === "string" && packageJson.description_zh.length > 0,
+  "package must include a localized Chinese description");
+check(mcp.mcpServers?.["kling-ai-plugin"]?.url === "https://kling.ai/mcp", "unexpected Kling Global MCP URL");
 check(mcp.mcpServers?.["kling-ai-plugin"]?.type === "http", "Kling MCP transport must be http");
 check(Object.keys(mcp.mcpServers ?? {}).join() === "kling-ai-plugin", "only kling-ai-plugin may be registered");
 check(packageJson.license === "MIT", "package license must be MIT");
@@ -104,18 +107,40 @@ if (!existsSync(join(root, ".git"))) {
   check(macOSMetadata.length === 0, `release must not contain macOS metadata: ${macOSMetadata.join(", ")}`);
 }
 
-for (const name of ["kling-ai-plugin", "kling-ai-generate-image", "kling-ai-generate-video"]) {
-  const skill = readExisting(`skills/${name}/SKILL.md`);
+for (const { directory, name } of [
+  { directory: "kling-ai-plugin", name: "kling-ai" },
+  { directory: "kling-ai-generate-image", name: "kling-ai-generate-image" },
+  { directory: "kling-ai-generate-video", name: "kling-ai-generate-video" },
+]) {
+  const skill = readExisting(`skills/${directory}/SKILL.md`);
   check(skill.startsWith("---\n"), `${name} skill must have YAML frontmatter`);
-  check(skill.match(/^name:\s*(\S+)\s*$/m)?.[1] === name, `${name} skill name must match its directory`);
+  check(skill.match(/^name:\s*(\S+)\s*$/m)?.[1] === name, `${directory} skill must declare name ${name}`);
   check(/^description:\s*.+$/m.test(skill), `${name} skill must have a description`);
 }
 
 const coreSkill = readExisting("skills/kling-ai-plugin/SKILL.md");
-check(coreSkill.includes("直到成功或失败"), "生成流程必须持续查询到终态");
-check(coreSkill.includes("用户直接查询状态时"), "直接状态查询必须与生成轮询分开");
+check(coreSkill.includes("until the task succeeds or fails"), "generation workflow must poll until a terminal state");
+check(coreSkill.includes("For a direct status request"), "direct status behavior must remain separate from generation polling");
 check(coreSkill.includes('client_name: "Plugin-WorkBuddy"'), "OAuth client name requirement must be preserved");
-check(coreSkill.includes("references/mcp-contract.md"), "核心 Skill 必须链接完整 MCP 契约");
+check(coreSkill.includes("references/mcp-contract.md"), "core Skill must link the complete MCP contract");
+check(coreSkill.includes("treat the request as a deliverable"),
+  "core Skill must default to deliverable quality");
+check(coreSkill.includes("`1080p`") && coreSkill.includes("`4k`") && coreSkill.includes("`720p`"),
+  "core Skill must distinguish normal, high-quality, and draft resolutions");
+
+const imageSkill = readExisting("skills/kling-ai-generate-image/SKILL.md");
+check(imageSkill.includes("supported `2k` setting for a normal deliverable"),
+  "image Skill must contain a quality-first resolution strategy");
+check(imageSkill.includes("Translate abstract requests") && imageSkill.includes("visible lighting"),
+  "image Skill must translate abstract quality requests into executable visual direction");
+
+const videoSkill = readExisting("skills/kling-ai-generate-video/SKILL.md");
+check(videoSkill.includes("Use `1080p` for a normal deliverable"),
+  "video Skill must use 1080p as the normal deliverable baseline");
+check(videoSkill.includes("commercial, large-screen, or post-production work") && videoSkill.includes("`4k`"),
+  "video Skill must route high-quality work to 4k when supported");
+check(videoSkill.includes("`720p` only for drafts, speed/cost-first work"),
+  "video Skill must limit 720p to draft or cost-first work");
 
 const skillCorpus = requiredFiles
   .filter((path) => path.startsWith("skills/") && path.endsWith(".md"))
@@ -139,7 +164,7 @@ for (const capability of [
   "element_update",
   "element_delete",
 ]) {
-  check(skillCorpus.includes(capability), `skills 缺少 MCP 能力契约：${capability}`);
+  check(skillCorpus.includes(capability), `skills are missing the MCP capability contract: ${capability}`);
 }
 const modelSnapshot = readExisting("skills/kling-ai-plugin/references/model-parameters.md");
 for (const parameter of [
@@ -150,12 +175,14 @@ for (const parameter of [
   "img_resolution",
   "resolution",
   "imageCount",
+  "image_count",
+  "quality",
   "elements",
   "inputs",
   "motionDirection",
   "keepOriginalSound",
 ]) {
-  check(modelSnapshot.includes(parameter), `模型参数快照缺少：${parameter}`);
+  check(modelSnapshot.includes(parameter), `Global model parameter snapshot is missing: ${parameter}`);
 }
 const mcpContract = readExisting("skills/kling-ai-plugin/references/mcp-contract.md");
 for (const outputField of [
@@ -176,16 +203,16 @@ for (const outputField of [
   "hasAudio",
   "outputSchema",
 ]) {
-  check(mcpContract.includes(outputField), ` MCP 输出契约缺少：${outputField}`);
+  check(mcpContract.includes(outputField), `Global MCP output contract is missing: ${outputField}`);
 }
 
-const chineseUserFacingFiles = requiredFiles.filter((path) => path.endsWith(".md"));
-for (const path of chineseUserFacingFiles) {
-  check(/\p{Script=Han}/u.test(readExisting(path)), `${path} must use Chinese in the China package`);
+const englishUserFacingFiles = requiredFiles.filter((path) => path.endsWith(".md"));
+for (const path of englishUserFacingFiles) {
+  check(!/\p{Script=Han}/u.test(readExisting(path)), `${path} must use English in the Global package`);
 }
-check(!read("package.json").includes("https://kling.ai/mcp")
-  && !read("connector-meta.json").includes("https://kling.ai/mcp"),
-"China package metadata must not reference the Global endpoint");
+check(!read("package.json").includes("https://klingai.com/mcp")
+  && !read("connector-meta.json").includes("https://klingai.com/mcp"),
+"Global package metadata must not reference the China endpoint");
 
 for (const path of requiredFiles.filter((path) => path.endsWith(".md"))) {
   const markdown = readExisting(path);

@@ -1,9 +1,9 @@
-# 远程工具工作流
+# Remote tool workflow
 
-1. 从位于 `https://klingai.com/mcp` 的远程 `kling-ai-plugin` 读取 `tools/list`；生成前调用 `who_am_i`，只使用目标模型声明的参数、默认值、枚举和素材输入。
-2. 对于附带媒体，调用远程上传工具，并将它返回的引用传给生成请求。
-3. 补齐会实质影响结果的缺失输入后，使用 `{model, arguments[], inputs[], rationale, taskTraceId}` 信封只调用一次选定的远程生成工具，并保留其 `generationId`。同一目标链路复用 UUIDv7 `taskTraceId`。不要增加积分警告或单独的确认步骤。
-4. 如果提交未进入终态，按提供方允许的间隔，使用实时模式定义声明的状态工具轮询，直到成功或失败。若用户取消或当前轮次超时，返回当前状态和任务编号。
-5. 完成后，展示返回的图像、视频、文本或一个主要输出链接。
+1. Read `tools/list` from remote `kling-ai-plugin` at `https://kling.ai/mcp`. Before generation, call `who_am_i` and use only the target model's declared arguments, defaults, allowed values, and media inputs.
+2. For attached media, call the remote upload tool and pass its returned reference to the generation request.
+3. Once materially missing inputs are resolved, call the selected remote generation tool once with `{model, arguments[], inputs[], rationale, taskTraceId}` and preserve its `generationId`. Reuse one UUIDv7 `taskTraceId` throughout the objective. Do not add a credit warning or separate confirmation step.
+4. If submission is not terminal, poll with the status tool declared by the live schema at provider-allowed intervals until success or failure. On user cancellation or current-turn timeout, return the state and task number.
+5. Present the returned image, video, text, or one primary output link when complete.
 
-绝不自动重试生成任务。
+Never retry a generation automatically.

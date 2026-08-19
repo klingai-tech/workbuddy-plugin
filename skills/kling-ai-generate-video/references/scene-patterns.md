@@ -1,61 +1,61 @@
-# 视频场景模式
+# Video scene patterns
 
-选择一种主要模式。只有在时长和实时模式定义能够连贯支持结果时，才能组合多种模式。
+Choose one primary pattern. Combine patterns only when the duration and live schema can support the result coherently.
 
-## 电影感连续镜头
+## Cinematic continuous shot
 
-- 定义起始构图、主体动作、镜头路径、环境运动和收尾节拍。
-- 一次只使用一个镜头动作：缓慢推近、后拉揭示、横向跟拍、环绕、升降、手持跟拍或固定机位观察。
-- 锚定尺度和空间方位，使运动易于理解。
-- 适合氛围、角色瞬间、产品亮相、变换效果和图像动画。
+- Define the starting composition, subject action, camera path, environmental motion, and end beat.
+- Use one camera verb at a time: slow push-in, pull-back reveal, lateral track, orbit, crane rise, handheld follow, locked-off observation.
+- Anchor scale and geography so motion remains understandable.
+- Good for atmosphere, character moments, product reveals, transformations, and image animation.
 
-## 图生视频
+## Image-to-video
 
-- 将源画面视为锁定的构图和身份，而不是宽泛的氛围参考。
-- 只描述可信的运动：呼吸、衣料或头发摆动、视线、手部动作、环境特效和镜头漂移。
-- 说明必须保持稳定的内容：面孔、身体比例、产品形状、标志、背景建筑和色彩。
-- 避免在短片中同时出现大幅主体运动、激烈镜头运动和重大场景变换。
+- Treat the source frame as locked composition and identity, not a loose mood reference.
+- Describe only plausible motion: breathing, fabric/hair movement, eye line, hand action, environmental effects, camera drift.
+- State what must remain stable: face, body proportions, product shape, logo, background architecture, color palette.
+- Avoid simultaneous large subject motion, aggressive camera motion, and major scene transformation in a short clip.
 
-## 产品展示
+## Product showcase
 
-- **影棚亮相：**采用受控环绕或推近、有意设计的反射变化、干净表面和清晰轮廓。
-- **功能演示：**每个镜头只展示一个功能或动作，手部互动清晰，机械运动可信，不虚构能力。
-- **生活方式场景：**通过动作展示语境和益处，不使用缺乏依据的文字宣传。
-- **开箱：**依次建立未拆封产品、开启动作、揭晓、反应或细节。只有在用户明确要求时才使用多镜头。
-- **商业广告：**依次安排吸引点、产品证据和主视觉特写。除非用户提供，否则将宣传语和片尾卡文案留给确定性的后期制作。
+- **Studio reveal:** controlled orbit or push-in, deliberate reflection movement, clean surface, readable silhouette.
+- **Demonstration:** one feature/action per shot, clear hand interaction, believable mechanics, no invented capabilities.
+- **Lifestyle:** show context and benefit through action, not unsupported text claims.
+- **Unboxing:** establish sealed product, opening action, reveal, reaction/detail. Use multiple shots only when explicitly requested.
+- **Commercial:** hook, product proof, hero close-up. Reserve claims and end-card copy for deterministic post-production unless the user supplies them.
 
-## UGC 与出镜讲述
+## UGC and presenter
 
-- 使用自然的平视取景、可信的手机镜头运动、日常环境，以及不完美但有意设计的表演。
-- 当实时工具不接受同步音频时，将对话或旁白与视觉动作规划分开。
-- 绝不虚构用户证言、个人经历、前后对比效果、代言或价格。
+- Natural eye-level framing, believable phone-camera movement, casual environment, imperfect but intentional performance.
+- Keep dialogue/narration separate from visual action planning when the live tool does not accept synchronized audio.
+- Never invent a testimonial, personal experience, before/after outcome, endorsement, or price.
 
-## 讲解视频
+## Explainer
 
-- 将内容拆成每个视觉段落一个观点：提出问题、展示机制、演示结果、以用户提供的行动指引收尾。
-- 使视觉复杂度与旁白时长匹配；不要把多个概念塞入一个短片。
-- 优先使用简单的标志性场景、图示、物体隐喻或受控产品演示，而不是难以阅读的画面文字段落。
-- 如果最终合成或音频超出 Kling 实时模式定义的能力，应明确交付短片方案或单独场景，而不是声称已经完成带旁白成片。
+- Break content into one idea per visual block: introduce problem, show mechanism, demonstrate outcome, close with supplied action.
+- Match visual complexity to narration duration; do not cram several concepts into one short clip.
+- Prefer simple iconic scenes, diagrams, object metaphors, or controlled product demonstrations over unreadable on-screen paragraphs.
+- If final assembly/audio is outside the live Kling schema, clearly deliver clip plans or individual scenes rather than claiming a finished narrated film.
 
-## 多镜头叙事
+## Multi-shot narrative
 
-- 只有当用户要求多个镜头，或者故事中的地点、时间、尺度或信息状态发生变化时，才使用多镜头。
-- 为每个镜头指定用途、时长、机位或取景、动作和连续性锚点。
-- 在镜头之间保持角色服装、面孔、产品结构、光线方向、色彩脚本、画面方向和地点细节一致。
-- 当实时模式定义要求明确时间安排时，各镜头时长总和必须等于用户要求的总时长。
+- Use only when the user asks for multiple shots or the story changes place, time, scale, or information state.
+- Give every shot a purpose, duration, camera/framing, action, and continuity anchor.
+- Preserve character wardrobe, face, product geometry, lighting direction, color script, screen direction, and location details across shots.
+- Sum shot durations to the requested total when the live schema requires explicit timing.
 
-## 社交媒体格式
+## Social formats
 
-- **9:16 竖版短视频：**立即出现视觉吸引点，动作位于竖向中心，人脸或产品处于上部三分之二区域，下方保留界面安全区域。
-- **1:1 或 4:5 信息流：**使用中景、清晰轮廓和克制的横向运动。
-- **16:9 营销活动或 YouTube：**展示更宽广的空间方位、更强的入场或揭示效果，以及有意设计的负空间。
+- **9:16 reel/short:** immediate visual hook, central vertical action, face/product in upper two-thirds, UI-safe lower area.
+- **1:1 or 4:5 feed:** medium framing, readable silhouette, restrained lateral movement.
+- **16:9 campaign/YouTube:** wider geography, stronger entrances/reveals, intentional negative space.
 
-## 概念建议
+## Concept suggestions
 
-当用户征集创意时，提供三个不同方向：
+When the user asks for ideas, offer three distinct directions:
 
-1. 演示——清晰展示会发生什么，或产品如何工作。
-2. 情绪——聚焦人物反应、氛围或变化。
-3. 奇观——运用尺度、动作编排、材质特效或意外的视觉隐喻。
+1. Demonstration — clearly show what happens or how the product works.
+2. Emotion — focus on a human reaction, atmosphere, or transformation.
+3. Spectacle — use scale, choreography, material effects, or an unexpected visual metaphor.
 
-为每个方向说明吸引点、镜头结构、镜头行为、时长适配情况，以及受保护的品牌或参考素材事实。
+For each, state the hook, shot structure, camera behavior, duration fit, and protected brand/reference facts.

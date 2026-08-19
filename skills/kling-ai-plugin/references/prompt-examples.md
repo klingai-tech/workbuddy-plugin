@@ -1,55 +1,54 @@
-# Kling AI 提示词与用法示例
+# Kling AI prompt and usage examples
 
-## 建议提示词
+## Suggested prompts
 
-- 画一只身穿复古宇航服的小熊猫，漂浮在空间站舷窗前，地球蓝光映亮面部，细节丰富，电影级质感
-- 制作一段 5 秒电影感视频：机甲战士从高空重砸地面，冲击波瞬间震开碎石与尘雾，镜头快速推近，充满力量感
-- 制作一条 15 秒运动鞋营销短片：街头开场抓住注意力，三秒切出产品特写与穿着动态，结尾落在鞋身细节特写
+- Create a red panda in a vintage spacesuit floating before a space-station window, with Earth's blue glow lighting its face and cinematic detail.
+- Create a five-second cinematic video of a mech warrior slamming into the ground as a shockwave scatters rubble and dust while the camera pushes in.
+- Create a fifteen-second sneaker campaign clip that opens on an urban street, cuts to product and on-foot details, and ends on the shoe materials.
 
-## 自然语言请求
+## Natural-language requests
 
-文生视频：
+Text-to-video:
 
-> 用可灵生成一个 5 秒、16:9 的电影感视频：雨夜便利店门口，一辆复古摩托缓慢停下，镜头从远景平稳推近。
+> Use Kling AI to create a five-second, 16:9 cinematic video of a vintage motorcycle stopping outside a convenience store on a rainy night while the camera pushes steadily from a wide shot.
 
-图生视频：
+Image-to-video:
 
-> 用我附上的图片做 5 秒图生视频。人物身份、五官和服装保持一致，只让镜头缓慢从左侧环绕到正面，720p。
+> Animate my attached image for five seconds. Preserve the subject's identity, face, and clothing while the camera slowly arcs from the left to the front. Use 720p.
 
-多镜头视频：
+Multi-shot video:
 
-> 生成一条多镜头产品片：先用全景建立场景，再推近产品并从侧面展示，最后定格品牌细节，镜头衔接自然。时长和分镜参数使用当前可灵支持的值。
+> Create a multi-shot product film: establish the setting with a wide shot, push toward the product and show its side, then hold on the brand detail. Use duration and shot parameters supported by the current Kling schema.
 
-文生图：
+Text-to-image:
 
-> 用可灵生成一张 16:9 海报主视觉：极简白色摄影棚，一只透明玻璃茶壶，柔和侧光，保留右侧标题留白。
+> Use Kling AI to create a 16:9 poster key visual of a transparent glass teapot in a minimal white studio with soft side lighting and title space on the right.
 
-完整生成请求：
+Complete generation request:
 
-> 用可灵生成 5 秒、16:9、720p 的单镜头视频：雨夜便利店门口，一辆复古摩托缓慢停下。生成后返回任务编号。
+> Use Kling AI to create a five-second, 16:9, 720p single-shot video of a vintage motorcycle stopping outside a convenience store on a rainy night. Return the task number after submission.
 
-状态查询：
+Status check:
 
-> 查询这个可灵任务编号的当前状态，只查一次，不要循环轮询。
+> Check the current state of this Kling task number once. Do not start a polling loop.
 
-## 提示词构建
+## Prompt construction
 
-优先按以下顺序提供具体指令：
+Prefer concrete direction in this order:
 
-1. 主体和环境
-2. 动作或变化
-3. 镜头和分镜结构
-4. 光线和视觉风格
-5. 身份或一致性约束
-6. 仅在能防止可能发生的失败时添加排除项
+1. subject and setting
+2. action or transformation
+3. camera and shot structure
+4. lighting and visual style
+5. identity or consistency constraints
+6. exclusions only when they prevent a likely failure
 
-避免罗列重复而冗长的负面提示。对于图生视频，应说明哪些内容必须保持稳定，以及哪些内容允许运动。
+Avoid long lists of repeated negatives. For image-to-video, state what must remain stable and what is allowed to move.
 
-## 面向用户的提交结果
+## User-facing submission result
 
-不要增加积分警告或单独的确认步骤。提交后使用一个简洁的信息块：
+Do not add a credit warning or a separate confirmation step. After submission, use one compact message:
 
 ```text
-完成后返回主结果。结果链接可能是临时签名地址；地址失效不代表作品丢失，
-可重新查询原任务编号获取新的访问地址，或在已授权账号的可灵官网生成记录中查看。
+The generation is in progress. I will return the primary result when it completes. Result links may be temporary; if one expires, query the original task number again or open the generation history in the authorized Kling account.
 ```

@@ -1,61 +1,64 @@
 ---
 name: kling-ai
-description: 当用户希望通过 WorkBuddy 中的KlingAI 连接器生成电影级画质的图像与视频时使用。适合海报、广告、短片等对视觉品质要求较高的创作场景。
+description: Cinematic image & video generation via Kling AI in WorkBuddy. Supports T2I/I2I/T2V/I2V. Ideal for posters, ads, short films.
 ---
 
-# 可灵 AI
+# Kling AI
 
-只使用本包在 `https://klingai.com/mcp` 配置的可灵 MCP 服务。
+Use the configured Kling MCP server at `https://kling.ai/mcp`.
 
-## 请求路由
+## Route specialized generation
 
-- 文生图、图生图、海报、封面、产品静物和图像概念请求交给 `kling-ai-generate-image`。
-- 文生视频、图生视频、动作控制、动画、镜头运动、分镜和视频概念请求交给 `kling-ai-generate-video`。
-- OAuth、退出或切换账号、素材上传、动作库、Element 素材库、灵感值查询、跨媒体请求和任务状态查询保留在本 Skill 中处理。
-- 对已有结果的后续请求走结果查询流程，不要重新创建生成任务。
+- Route text-to-image, image-to-image, posters, covers, product stills, and image concept requests to `kling-ai-generate-image`.
+- Route text-to-video, image-to-video, motion control, animation, camera motion, storyboards, and video concept requests to `kling-ai-generate-video`.
+- Keep OAuth, logout or account switching, uploads, the motion library, Element management, credit checks, cross-media requests, and task status in this Skill.
+- Route follow-ups on an existing output through the result workflow instead of creating a new generation.
 
-附件本身不能决定用途。用户没有说明时，应先确认附件是首帧、身份或产品参考、待编辑源图，还是风格参考。
+An attachment does not determine its own role. When the user has not said how to use attached media, ask whether it is a first frame, identity/product reference, editable source, or style inspiration before submission.
 
-## 安全与提交约定
+## Safety and submission contract
 
-- 只使用宿主的 MCP OAuth 连接流程。绝不索取 API Key，也不在日志中暴露凭证、Cookie、授权头、私有账号字段或签名 URL。
-- Before OAuth dynamic client registration, include `client_name: "Plugin-WorkBuddy"`. This is OAuth metadata, not a tool argument, URL parameter, or secret. If WorkBuddy cannot inject it, stop before authorization and report the limitation.
-- 用户提出生成请求，即表示在补齐会实质影响结果的缺失信息后，授权提交一次任务。不要额外增加灵感值消耗警告或单独确认步骤。
-- 每个已批准意图最多提交一次。失败或结果不明确时，不要自动重试。
-- 运行时发现远程工具和模式定义；提供方的实时模式定义优先于本 Skill 的示例。
-- 需要时先用远程上传工具处理附件，并严格复用实时模式定义要求的返回引用。
-- 提交进入非终态后，按提供方允许的间隔查询状态，直到成功或失败。只有用户取消或当前轮次超时才停止；停止时返回当前状态和任务编号。
+- Use OAuth through the host MCP connection flow. Never ask for an API key or expose credentials, cookies, authorization headers, private account fields, or signed URLs in logs.
+- A user request to generate authorizes one submission after materially missing inputs are resolved. Do not add a credit-cost warning or a separate confirmation step.
+- Submit at most once per approved intent. Do not automatically retry failed or ambiguous submissions.
+- Discover the live remote tools and schemas at runtime; the provider schema overrides examples in this Skill.
+- Upload attached media with the remote upload tool before generation when required. Reuse the returned provider reference exactly as the live schema requires.
+- If submission returns a non-terminal state, poll with the status tool declared by the live schema at provider-allowed intervals until the task succeeds or fails. Stop only if the user cancels or the current turn times out; then return the current state and task number.
 
-生成前阅读[工具流程](references/tool-workflows.md)和[MCP 输入输出契约](references/mcp-contract.md)。只有出现授权、模式定义、上传或提供方错误时，才阅读故障排查说明。
+Read [the remote tool workflow](references/tool-workflows.md) and [the MCP input and output contract](references/mcp-contract.md) before a generation call. Read troubleshooting guidance only after an authorization, schema, upload, or provider failure.
 
-## 工作流程
+## OAuth client identity
 
-1. 判断用户需要生成、动作控制、Element 管理、账号操作还是只读查询。
-2. 先读取实时 `tools/list`；生成或动作控制前再调用 `who_am_i`，从目标模型声明中获取完整参数与素材输入。
-3. 只询问会实质影响结果的缺失创意要求。
-4. 只补齐会实质改变结果的缺失设置。
-5. 选定远程生成工具后只调用一次。
-6. 完整保留提供方返回的 `generationId` 和 `taskTraceId`。同一目标链路复用 UUIDv7 `taskTraceId`；向用户把 `generationId` 显示为**任务编号**。
-7. 提交未进入终态时，持续查询到成功或失败。若用户取消或当前轮次超时，返回当前状态和任务编号。
-8. 返回远程工具提供的主图、视频、文本或主要结果链接。
-9. 用户直接查询状态时，只调用一次实时状态工具并返回当前状态，不启动长时间轮询。
-10. 删除 Element 或退出/切换账号属于状态变更；只有用户明确要求时调用，并遵守工具说明中的确认与重新授权流程。
+Before OAuth dynamic client registration, include `client_name: "Plugin-WorkBuddy"`. This is OAuth metadata, not a tool argument, URL parameter, or secret. If the host cannot inject it, stop before authorization and report the limitation.
 
-## 质量优先的默认策略
+## Workflow
 
-仅在用户未指定其他选择且实时模式定义支持时使用。没有“草稿、预览、快速、省灵感值”等信号时，默认按可交付成片处理，不要为了节省资源静默降低质量：
+1. Identify whether the request is generation, motion control, Element management, an account operation, or a read-only query.
+2. Read the live `tools/list`; before generation or motion control, call `who_am_i` and obtain the complete arguments and media inputs for the target model.
+3. Ask only for missing creative requirements that materially affect the result.
+4. Resolve only missing settings that materially change the result.
+5. Call the selected remote generation tool exactly once.
+6. Preserve the exact `generationId` and any `taskTraceId` returned by the provider. Reuse one UUIDv7 `taskTraceId` throughout a single objective. Present `generationId` to the user as the **task number**.
+7. If the submission is not terminal, poll its status at provider-allowed intervals until success or failure. On user cancellation or current-turn timeout, return the current state and task number.
+8. Report the result returned by the remote tool. Provide the primary image, video, text, or one Markdown link to the main output when available.
+9. For a direct status request, call the live status tool once and report the current state; do not start a new long-running poll.
+10. Element deletion and logout/account switching mutate state. Call them only on an explicit user request and follow the tool's confirmation and reauthorization contract.
 
-- 模型：在满足生成模式、参考素材和所需参数的模型中，优先完整质量模型；只有用户明确重视速度或成本时才优先极速、Turbo 或低成本模型。模型名称始终来自当次 `who_am_i`。
-- 图像：普通交付默认选择 `2k`；用户要求高质量、商用、广告、精细材质或后期裁切时，在实时模型支持时选择 `4k`；只有草稿或速度优先时选择 `1k`。若实时模型默认值更高，不要主动降级。
-- 视频：普通交付默认选择 `1080p`；高质量、商用、大屏或后期需求在实时模型支持时选择 `4k`；只有草稿、快速或成本优先时选择 `720p`，或者目标模式仅支持 `720p`。若实时模型默认值更高，不要主动降级。
-- 视频时长：一个动作或单一镜头用 `5` 秒；对白、演唱、完整产品动作或两个相连节拍优先 `10` 秒；复杂叙事只在实时模式支持且确有必要时使用更长时长。选择能完整表达内容的最短时长，不要把所有请求强行压成 5 秒。
-- 文生视频宽高比：从投放位置推导；竖版短视频用 `9:16`，方形信息流用 `1:1`，横版广告、网页或 YouTube 用 `16:9`。没有投放上下文时才使用 `16:9`。
-- 图生视频宽高比：根据首帧推导；除非实时工具要求，否则不要传入宽高比。
+## Quality-first defaults
 
-## 失败处理
+Use these only when the user did not specify alternatives and the live schema supports them. In the absence of words such as “draft,” “preview,” “fast,” or “save credits,” treat the request as a deliverable and do not silently trade quality for cost:
 
-- 授权失败：引导用户使用 WorkBuddy 的原生 MCP 连接流程；授权成功后才重试。
-- 模型或参数无效：刷新实时模式定义，只修改不受支持的字段。
-- 提供方任务失败：解释提供方消息并保留 `generationId`；不要重新提交。
-- 灵感值不足：告知用户充值后再试；不要自动重试。
-- 提交响应丢失或超时：将任务是否创建视为未知，先查询已有任务，再考虑任何新提交。
+- Model: among models compatible with the generation mode, references, and required arguments, prefer a full-quality model. Prefer a fast, Turbo, or low-cost model only when the user prioritizes speed or cost. Always obtain model names from the current `who_am_i`.
+- Images: use `2k` for a normal deliverable; use `4k` when supported for high-quality, commercial, advertising, fine-material, or crop-heavy work; use `1k` only for drafts or speed-first work. Do not lower a higher live model default.
+- Video: use `1080p` for a normal deliverable; use `4k` when supported for high-quality, commercial, large-screen, or post-production work; use `720p` only for drafts, speed/cost-first work, or a mode that supports no higher value. Do not lower a higher live model default.
+- Video duration: use `5` seconds for one action or one shot; prefer `10` seconds for dialogue, singing, a complete product action, or two connected beats; use a longer supported duration only when the narrative needs it. Choose the shortest duration that can complete the idea instead of forcing every request into five seconds.
+- Text-to-video ratio: infer it from the destination: `9:16` for vertical shorts, `1:1` for square feeds, and `16:9` for landscape ads, web, or YouTube. Use `16:9` only when no destination context exists.
+- Image-to-video ratio: derive it from the first frame and omit the ratio unless the live tool requires it.
+
+## Failure behavior
+
+- Authorization failure: direct the user to the host MCP connection flow, then retry only after authorization succeeds.
+- Invalid model or argument: refresh the live schema and revise only the unsupported field.
+- Provider task failure: explain the provider message and preserve the `generationId`; do not resubmit.
+- Insufficient credits: tell the user the balance is insufficient and ask them to recharge before trying again. Do not retry automatically.
+- Lost or timed-out submission response: treat task creation as unknown and query existing tasks before considering any new submission.

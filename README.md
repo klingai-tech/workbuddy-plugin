@@ -1,28 +1,41 @@
-# 可灵 AI WorkBuddy 连接器
+# Kling AI Global for WorkBuddy
 
-本包通过可灵官方 OAuth MCP 服务，让 WorkBuddy 可以创建和查询图片、视频生成任务。
+Kling AI connects WorkBuddy to the official OAuth-protected Kling MCP service
+for image and video creation.
 
-本包只使用 `mcp.json` 中的端点：`https://klingai.com/mcp`。
+This package uses only the Global Kling MCP endpoint configured in `mcp.json`:
+`https://kling.ai/mcp`.
 
-## 功能
+## Capabilities
 
-- 文生图、图生图
-- 文生视频、图生视频
-- 查询灵感值与任务状态
-- 持续查询生成进度并返回结果
+- Text-to-image and image-to-image generation
+- Text-to-video and image-to-video generation
+- Credit and task-status queries
+- Generation progress tracking and result delivery
 
-## 连接账号
+## Connect
 
-在 WorkBuddy 中安装本包，点击“连接”，然后在浏览器完成可灵账号 OAuth 授权。授权和续期由 WorkBuddy 管理，不需要 API Key。
+Install the connector from WorkBuddy, choose **Connect**, and complete the Kling
+OAuth flow in the browser. WorkBuddy manages authorization and refresh; no API
+key is required.
 
-切换账号或区域时，先断开当前连接再安装和连接目标包。不要在对话中粘贴账号凭据、Token 或 Cookie。
+To switch accounts or regions, disconnect the current account before installing
+and connecting the intended package. Never paste credentials, tokens, or cookies
+into a conversation.
 
-## 使用
+## Use
 
-直接用自然语言描述想生成的图片或视频。每次只提交一个生成任务，并按服务允许的间隔持续查询，直到成功或失败。如果当前轮次先结束，会返回任务编号，之后可继续查询同一任务。
+Describe the image or video you want in natural language. Kling AI submits one
+generation task and checks it at service-allowed intervals until it succeeds or
+fails. If the current turn ends first, it returns a **task number** that can be
+used to query the same task later.
 
-灵感值不足时，请充值后再试。完成后会返回可灵提供的主要图片、视频或结果链接。临时链接失效后，可以使用原任务编号重新查询。
+If credits are insufficient, recharge the Kling account and try again. Completed
+results include the primary image, video, or result link supplied by Kling.
+Temporary result links can be refreshed by querying the original task number;
+the work also remains available in the authorized account's Kling generation
+history.
 
-## 许可证
+## License
 
 [MIT](./LICENSE)

@@ -1,66 +1,68 @@
 ---
 name: kling-ai-generate-image
-description: 通过 WorkBuddy 中的 Kling AI 生成电影级画质图像。支持文生图、图生图，适用于海报、产品摄影、广告创意等高视觉品质要求的场景。
+description: Generate cinematic-quality images via Kling AI in WorkBuddy. Supports T2I & I2I. Ideal for posters, product photography, ads, and high-visual-quality creative work.
 ---
 
-# Kling AI 图像生成
+# Kling AI Image Generation
 
-将创意需求转化为一条规格明确的 Kling 图像请求。仅使用在 `https://klingai.com/mcp` 配置的 MCP 所提供的实时工具和模式定义。
+Turn a creative brief into one well-specified Kling image request. Use only the live tools and schemas from the configured MCP at `https://kling.ai/mcp`.
 
-## 使用约定
+## Contract
 
-- 使用宿主管理的 OAuth。绝不请求或暴露 API key、token、cookie、授权头或签名 URL。
-- 用户提出生成请求，即表示在补齐会实质影响结果的缺失输入后，授权提交一次任务。不要增加积分消耗警告或单独的确认步骤。
-- 每个已批准的意图只提交一次。绝不盲目重试结果不明确或失败的提交。
-- 先发现实时模式定义，再选择工具、模型、输入名称或枚举值。实时提供方字段优先于本文示例。
-- 需要时，使用远程上传工具上传附带的参考媒体，并原样复用返回的提供方引用。
+- Use host-managed OAuth. Never request or expose API keys, tokens, cookies, authorization headers, or signed URLs.
+- A user request to generate authorizes one submission after materially missing inputs are resolved. Do not add a credit-cost warning or a separate confirmation step.
+- Submit once per approved intent. Never blind-retry an ambiguous or failed submission.
+- Discover the live schema before choosing tools, models, input names, or enumerated values. Live provider fields override examples here.
+- Upload attached reference media with the remote upload tool when required, then reuse the returned provider reference exactly.
 
-提交前阅读[完整 MCP 输入输出与当前模型参数快照](../kling-ai-plugin/references/mcp-contract.md)，并用当次 `tools/list` / `who_am_i` 覆盖快照中的动态值。
+Before submission, read the [complete MCP input/output and current model parameter snapshot](../kling-ai-plugin/references/mcp-contract.md), then let the current `tools/list` and `who_am_i` override dynamic snapshot values.
 
-## 工作流程
+## Workflow
 
-1. 使用下方模式表判断请求类型。
-2. 对于产品、广告、缩略图、人像、编辑视觉或概念创作，阅读[场景模式](references/scene-patterns.md)。
-3. 当需求模糊、包含参考图或精确文案，或者需要多个受控变体时，阅读[提示词构建](references/prompt-construction.md)。
-4. 只询问会实质影响结果的缺失信息：主体或产品、用途、宽高比、必需文案或必须保持一致的参考身份。
-5. 在满足生成模式和参考素材的实时模型中，优先完整质量模型；只有用户明确要求草稿、快速或省灵感值时才优先低成本或极速模型。
-6. 构建一条提示词，分别说明主体、动作、环境、构图、光线、色彩、材质细节、镜头语言和排除项。把“高级、电影感、高质量”等抽象要求落实为可见的光线、材质、景深、色彩和构图，不要只堆砌形容词。
-7. 信息足够后，只调用一次实时图像生成工具。保留准确的 `generationId` 及任何 `taskTraceId`。
-8. 如果提交未进入终态，按提供方允许的间隔轮询状态，直到成功或失败。若用户取消或当前轮次超时，返回当前状态和任务编号。
-9. 提供 Kling 返回的主图像或结果链接。将 `generationId` 显示为**任务编号**；除非故障排查需要，否则不对外显示 `taskTraceId`。
+1. Classify the request using the mode table below.
+2. Read [scene patterns](references/scene-patterns.md) for product, advertising, thumbnail, portrait, editorial, or conceptual work.
+3. Read [prompt construction](references/prompt-construction.md) when the brief is vague, has references, contains exact copy, or needs multiple controlled variants.
+4. Ask only for missing facts that materially change the result: subject/product, intended use, ratio, required copy, or mandatory reference identity.
+5. Among live models compatible with the mode and references, prefer a full-quality model. Prefer a low-cost or fast model only when the user explicitly asks for a draft, speed, or credit savings.
+6. Build one prompt that separates subject, action, environment, composition, lighting, palette, material detail, camera language, and exclusions. Translate abstract requests such as “premium,” “cinematic,” or “high quality” into visible lighting, materials, depth of field, color, and composition instead of stacking adjectives.
+7. Call the live image generation tool once when the request has enough information. Preserve the exact `generationId` and any `taskTraceId`.
+8. If the submission is not terminal, poll its status at provider-allowed intervals until success or failure. On user cancellation or current-turn timeout, return the current state and task number.
+9. Provide the primary image or result link returned by Kling. Show `generationId` as the **task number** and keep `taskTraceId` internal unless troubleshooting requires it.
 
-## 生成模式
+## Generation modes
 
-| 用户意图 | 模式 | 必须采用的理解方式 |
+| User intent | Mode | Required interpretation |
 | --- | --- | --- |
-| 文生图 / text-to-image | 新建图像 | 不使用源图控制身份或构图，完全根据文字需求构建场景。 |
-| 图生图 / image-to-image | 编辑或参考图引导的图像 | 至少一张图像用于控制内容、身份、产品结构、构图或风格。为每项输入明确指定角色。 |
-| Element 参考主体 | 图生图 | 先读取 Element，确认它是图片主体，并只选择实时模式定义明确支持 `elements` 的图生图模型。文生图不使用 Element。 |
-| 变体 / restyle | 聚焦单项变化的图生图 | 锁定源图中所有未指定的事实，并明确唯一允许改变的内容。 |
-| 查进度 / status | 只读 | 不调用生成工具；查询已有任务。 |
+| Text-to-image | New image | No source image controls identity or composition. Build the scene from the text brief. |
+| Image-to-image | Edit or reference-guided image | At least one image controls content, identity, product geometry, composition, or style. Assign every input an explicit role. |
+| Element subject reference | Image-to-image | Read the Element first, confirm it is an image subject, and use only an image-to-image model whose live schema explicitly supports `elements`. Text-to-image never uses Elements. |
+| Restyle | Focused image-to-image change | Lock all unspecified source facts and name the one allowed change. |
+| Status check | Read-only | Do not call a generation tool; query the existing task. |
 
-不要静默切换模式。附带图像不等于自动要求图生图：如果用户要求生成一张无关的新图像，只有在确认附件与请求无关后才能忽略它。反过来，在上传或模式定义校验失败后，也绝不能把明确的图生图请求降级为文生图。
+Do not silently switch modes. An attached image is not automatically an image-to-image instruction: if the user asks for an unrelated new image, ignore it only after confirming it is irrelevant. Conversely, never reduce an explicit image-to-image request to text-to-image after an upload or schema failure.
 
-调用工具前，在内部检查所选模式、宽高比、参考图角色和允许的改动。除非需要用户澄清缺失的创意要求，否则不要显示提交前的过程消息。
+Before calling the tool, check the selected mode, ratio, reference roles, and
+allowed changes internally. Do not show a pre-submission process message unless
+you need the user to clarify a missing creative requirement.
 
-## 质量优先的默认策略
+## Defaults
 
-- 普通交付默认使用实时模型支持的 `2k`；高质量、商用、广告、精细材质或需要后期裁切时使用 `4k`；只有草稿或速度优先时使用 `1k`。若模型默认分辨率更高，不要主动降级。
-- 当实时模型提供 `quality` 参数时，普通交付使用中档，高质量或商用需求使用高档，草稿才使用低档；参数值必须来自实时枚举。
-- 根据投放位置选择宽高比：`1:1` 用于方形社交媒体图或产品图，`4:5` 用于信息流竖图，`9:16` 用于故事或竖版封面，`16:9` 用于横幅或缩略图。
-- 用户没有要求多个结果时只生成 `1` 张；不要用批量近似图替代清晰的创意决策。
-- 除非用户明确要求在生成图中包含文字，否则优先生成无文字的干净图像。
-- 制作变体时，每次已批准的生成只改变一个明确维度：概念、构图、色彩、镜头距离或表情。不要使用几乎重复的提示词。
-- 将用户提供的品牌名称、标签、标志、人脸和产品结构作为锁定约束保留。绝不虚构功效、价格、认证、成分、效果或统计数据。
+- Use a supported `2k` setting for a normal deliverable, `4k` for high-quality, commercial, advertising, fine-material, or crop-heavy work, and `1k` only for drafts or speed-first work. Do not lower a higher live model default.
+- When the live model exposes a `quality` argument, use its middle tier for a normal deliverable, its high tier for high-quality or commercial work, and its low tier only for drafts. Obtain the exact value from the live enumeration.
+- Choose ratio from the destination: `1:1` square social/product, `4:5` feed portrait, `9:16` story/vertical cover, `16:9` landscape banner or thumbnail.
+- Generate `1` image unless the user requests multiple results; do not substitute a batch of near-duplicates for a clear creative decision.
+- Prefer a clean image without text unless the user explicitly requires text in the generated artwork.
+- For variants, change one named dimension per approved generation: concept, composition, palette, camera distance, or expression. Do not use near-duplicate prompts.
+- Preserve supplied brand names, labels, logos, faces, and product geometry as locked constraints. Never invent claims, prices, certifications, ingredients, results, or statistics.
 
-## 质量门禁
+## Quality gate
 
-提交前，检查需求是否有一个清晰的焦点主体、易读的视觉层级、适合投放位置的安全区域、协调的光线，以及互不冲突的镜头或构图指令。如果宿主能够检查输出，应验证参考图还原度、文字准确性、主体数量和明显瑕疵。无法检查时，不要声称已完成视觉质检。
+Before submission, check that the brief has one clear focal subject, a readable hierarchy, destination-appropriate safe space, coherent lighting, and no conflicting camera/composition instructions. When the host can inspect outputs, verify reference fidelity, text accuracy, subject count, and obvious artifacts. Do not claim visual QA when inspection is unavailable.
 
-## 失败处理
+## Failure behavior
 
-- 授权失败：引导用户使用 WorkBuddy 原生 MCP 连接流程。
-- 参数不受支持：刷新实时模式定义，只修改被拒绝的字段。
-- 积分不足：告知用户充值并停止。不要自动重试。
-- 响应丢失：将任务是否创建视为未知；在进行任何新生成前，先查询已有任务。
-- 提供方失败：报告提供方消息并保留各项 ID；不要自动重新提交。
+- Authorization failure: direct the user to WorkBuddy's native MCP connection flow.
+- Unsupported argument: refresh the live schema and revise only the rejected field.
+- Insufficient credits: tell the user to recharge and stop. Do not retry automatically.
+- Lost response: treat task creation as unknown and query existing tasks before any new generation.
+- Provider failure: report the provider message and preserve IDs; do not resubmit automatically.

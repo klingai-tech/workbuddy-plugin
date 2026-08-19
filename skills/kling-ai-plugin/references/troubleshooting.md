@@ -1,36 +1,58 @@
-# 故障排查
+# Troubleshooting
 
-## 安装后缺少 MCP 工具
+## MCP tools are missing after installation
 
-重新加载 WorkBuddy，并确认 `kling-ai-plugin` MCP 服务器已启用。如果工具仍未出现，重启宿主并查看其 MCP 诊断信息。不要把索取 API key 作为替代方案。
+Reload WorkBuddy and confirm that the `kling-ai-plugin` MCP
+server is enabled. If the tools still do not appear, restart the host and
+check its MCP diagnostics. Do not ask for an API key as a workaround.
 
-## 未授权或未连接
+## Not authorized or not linked
 
-打开 WorkBuddy 的连接器连接入口，选择 `kling-ai-plugin`，并完成浏览器 OAuth 流程。WorkBuddy 可能会在连接器详情页或 MCP 设置中显示该连接。如果 OAuth 返回 `invalid_target`，不要臆造 `oauth_resource` 覆盖值；应报告宿主诊断信息，并验证当前 Kling 受保护资源元数据。
+Open WorkBuddy's connector connection entry, select `kling-ai-plugin`, and complete
+the browser OAuth flow. WorkBuddy may show the connection under the connector
+details page or MCP settings. If OAuth returns `invalid_target`, do not invent
+an `oauth_resource` override; report the host diagnostic and verify the current
+Kling protected-resource metadata.
 
-## 上传或图生视频失败
+## Upload or image-to-video fails
 
-- 刷新实时模式定义，并确认当前的上传工具及其输出字段。
-- 严格按返回内容原样复用上传引用。
-- 如果模式定义返回或要求 `taskTraceId`，应在上传和生成过程中保持相同的值。
-- 只使用所选实时工具声明的输入名称、值类型和参考素材角色；不要假设一定存在 `file_upload`、`first_image` 或仅接受字符串的参数值。
+- Refresh the live schema and identify its current upload tool and output field.
+- Reuse the upload reference exactly as returned.
+- If the schema returns or requires a `taskTraceId`, preserve the same value
+  across upload and generation.
+- Use only the input names, value types, and reference roles declared by the
+  selected live tool; do not assume `file_upload`, `first_image`, or string-only
+  argument values.
 
-## 任务仍在运行
+## Task is still running
 
-在最初的生成轮次中，按 Kling 允许的间隔继续使用实时状态工具轮询，直到任务成功或失败。如果用户取消或当前轮次超时，返回任务编号；任务仍会在 Kling 侧运行。用户之后明确查询状态时，只查询一次。
+During the original generation turn, continue polling with the live status tool
+at intervals allowed by Kling until the task succeeds or fails. If the user
+cancels or the turn times out, return the task number; the task keeps running on
+Kling's side. A later explicit status request queries it once.
 
-## 生成失败
+## Generation fails
 
-返回提供方的失败消息，并保留各项 ID 以供支持使用。不要自动创建替代任务，因为这可能再次消耗积分。
+Return the provider's failure message and preserve the IDs for support. Do
+not automatically create a replacement task because that may consume credits
+again.
 
-## 积分不足
+## Insufficient credits
 
-告知用户余额不足，并请其充值后再试。不要自动重试。
+Tell the user the balance is insufficient and ask them to recharge before
+trying again. Do not retry automatically.
 
-## 提交超时且无法确定是否已创建任务
+## Submission timed out and task creation is unknown
 
-不要重试生成调用。先使用可用的 `taskTraceId`、`generationId` 或提供方任务列表筛选条件查询已有任务。如果提供方无法证明任务是否已创建，应告知用户提交状态未知，并询问是否要创建新任务。
+Do not retry the generation call. First query existing tasks using the
+available `taskTraceId`, `generationId`, or provider task-list filters. If the
+provider cannot prove whether a task was created, tell the user the submission
+status is unknown and ask whether they want to create a new task.
 
-## 结果链接已过期
+## Result link expired
 
-签名输出 URL 可能是临时的。重新查询已保留的 `generationId` 以获取当前输出 URL，或者登录已授权账号后，在 Kling 官网查看生成历史记录。URL 过期不代表生成作品已丢失。不要记录签名 URL，也不要把它当作永久资产标识。
+Signed output URLs may be temporary. Query the preserved `generationId` again
+to obtain a current output URL, or view the generation history on the Kling
+website while signed in to the authorized account. An expired URL does not mean
+the generated work was lost. Do not log or treat a signed URL as a permanent
+asset identifier.
