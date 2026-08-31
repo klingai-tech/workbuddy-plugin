@@ -14,15 +14,17 @@ details page or MCP settings. If OAuth returns `invalid_target`, do not invent
 an `oauth_resource` override; report the host diagnostic and verify the current
 Kling protected-resource metadata.
 
-## Upload or image-to-video fails
+## Media intake or image-to-video fails
 
-- Refresh the live schema and identify its current upload tool and output field.
-- Reuse the upload reference exactly as returned.
-- If the schema returns or requires a `taskTraceId`, preserve the same value
-  across upload and generation.
+- Refresh the live schema and select the model before mapping media.
+- Prefer a host-provided media reference only when the selected model accepts it.
+- Preserve the same `taskTraceId` across media preparation and generation.
 - Use only the input names, value types, and reference roles declared by the
-  selected live tool; do not assume `file_upload`, `first_image`, or string-only
-  argument values.
+  selected model. Never interchange `image_1`, `first_image`, `tail_image`, or
+  `image`, and never put a local path directly in `inputs[]`.
+- If the media comes from an older Kling task, call `query_tasks` once immediately
+  before submission and use the fresh URL for the bound work index. If it still
+  fails, ask the user to attach the image again instead of trying old URLs.
 
 ## Task is still running
 
@@ -37,22 +39,33 @@ Return the provider's failure message and preserve the IDs for support. Do
 not automatically create a replacement task because that may consume credits
 again.
 
+For an opaque failure, empty result, repeated validation failure, billing
+anomaly, or clearly unintended result, call `feedback` once using the live tool
+contract. Feedback does not authorize a replacement generation.
+
 ## Insufficient credits
 
 Tell the user the balance is insufficient and ask them to recharge before
-trying again. Do not retry automatically.
+trying again. Do not submit another paid generation until the user explicitly
+states that the balance changed.
+
+## Rate limited or queue full
+
+Report the provider message and stop. Do not wait and retry automatically,
+switch models, alter parameters, or bypass the account queue. Status polling
+must continue to respect provider intervals.
 
 ## Submission timed out and task creation is unknown
 
-Do not retry the generation call. First query existing tasks using the
-available `taskTraceId`, `generationId`, or provider task-list filters. If the
-provider cannot prove whether a task was created, tell the user the submission
-status is unknown and ask whether they want to create a new task.
+Do not retry the generation call. `query_tasks` requires a `generationId`; when
+one exists, query only that task. Without a `generationId`, neither
+`taskTraceId` nor an undocumented task-list filter can recover the unknown
+submission. Report the status as unknown and stop. Create a new paid task only
+after the user explicitly accepts the possible duplicate charge.
 
 ## Result link expired
 
-Signed output URLs may be temporary. Query the preserved `generationId` again
-to obtain a current output URL, or view the generation history on the Kling
-website while signed in to the authorized account. An expired URL does not mean
-the generated work was lost. Do not log or treat a signed URL as a permanent
-asset identifier.
+Output URLs expire after 24 hours. Query the preserved `generationId` once to
+obtain a current URL for the bound `works[]` index, or view generation history
+while signed in. An expired URL does not mean the generated work was lost.
+Never log or treat a signed URL as a permanent asset identifier.

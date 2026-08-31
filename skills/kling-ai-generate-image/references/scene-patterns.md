@@ -35,7 +35,7 @@ Select the smallest pattern that matches the user's destination. User-supplied f
 
 ## Concept selection
 
-When the user requests ideas, propose three materially different routes, for example:
+Only when the user explicitly requests brainstorming, multiple options, or creative directions, propose three materially different routes. If the user already requested generation and did not ask to review concepts first, choose the best-fit route internally and continue; do not replace an authorized generation with a proposal:
 
 1. Product truth — literal demonstration or faithful hero shot.
 2. Human outcome — lifestyle moment showing use and emotion.

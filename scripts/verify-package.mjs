@@ -20,7 +20,7 @@ const requiredFiles = [
   "README.md",
   "LICENSE",
   "skills/kling-ai-plugin/SKILL.md",
-  "skills/kling-ai-plugin/references/prompt-examples.md",
+  "skills/kling-ai-plugin/references/failure-prevention.md",
   "skills/kling-ai-plugin/references/mcp-contract.md",
   "skills/kling-ai-plugin/references/model-parameters.md",
   "skills/kling-ai-plugin/references/tool-workflows.md",
@@ -116,6 +116,10 @@ for (const { directory, name } of [
   check(skill.startsWith("---\n"), `${name} skill must have YAML frontmatter`);
   check(skill.match(/^name:\s*(\S+)\s*$/m)?.[1] === name, `${directory} skill must declare name ${name}`);
   check(/^description:\s*.+$/m.test(skill), `${name} skill must have a description`);
+  check(skill.includes("model-parameters.md"), `${name} skill must directly link the shared model parameter snapshot`);
+  check(skill.includes("failure-prevention.md"), `${name} skill must directly link shared failure-prevention gates`);
+  check(skill.includes("tool-workflows.md"), `${name} skill must directly link the shared paid-task workflow`);
+  check(skill.includes("troubleshooting.md"), `${name} skill must directly link shared troubleshooting`);
 }
 
 const coreSkill = readExisting("skills/kling-ai-plugin/SKILL.md");
@@ -123,24 +127,36 @@ check(coreSkill.includes("until the task succeeds or fails"), "generation workfl
 check(coreSkill.includes("For a direct status request"), "direct status behavior must remain separate from generation polling");
 check(coreSkill.includes('client_name: "Plugin-WorkBuddy"'), "OAuth client name requirement must be preserved");
 check(coreSkill.includes("references/mcp-contract.md"), "core Skill must link the complete MCP contract");
-check(coreSkill.includes("treat the request as a deliverable"),
-  "core Skill must default to deliverable quality");
-check(coreSkill.includes("`1080p`") && coreSkill.includes("`4k`") && coreSkill.includes("`720p`"),
-  "core Skill must distinguish normal, high-quality, and draft resolutions");
+check(coreSkill.includes("mcpVersion") && coreSkill.includes("not a reason to block or restart repeatedly"),
+  "core Skill must avoid a restart loop on newer MCP versions");
+check(coreSkill.includes("works[]") && coreSkill.includes("expire after 24 hours"),
+  "core Skill must preserve work identity and disclose URL lifetime");
+check(coreSkill.includes("Pure status checks") && coreSkill.includes("Editing an existing result"),
+  "core Skill must distinguish result lookup from a paid follow-up generation");
+check(coreSkill.includes("Without a `generationId`, `query_tasks` cannot search"),
+  "core Skill must handle unknown submissions without inventing task search");
 
 const imageSkill = readExisting("skills/kling-ai-generate-image/SKILL.md");
-check(imageSkill.includes("supported `2k` setting for a normal deliverable"),
-  "image Skill must contain a quality-first resolution strategy");
-check(imageSkill.includes("Translate abstract requests") && imageSkill.includes("visible lighting"),
-  "image Skill must translate abstract quality requests into executable visual direction");
+check(imageSkill.includes("minimally sufficient prompt") && imageSkill.includes("observable traits"),
+  "image Skill must translate abstract quality requests into visible direction");
+check(imageSkill.includes("Pass `img_resolution` only when declared"),
+  "image Skill must not invent image resolution fields");
 
 const videoSkill = readExisting("skills/kling-ai-generate-video/SKILL.md");
-check(videoSkill.includes("Use `1080p` for a normal deliverable"),
-  "video Skill must use 1080p as the normal deliverable baseline");
-check(videoSkill.includes("commercial, large-screen, or post-production work") && videoSkill.includes("`4k`"),
-  "video Skill must route high-quality work to 4k when supported");
-check(videoSkill.includes("`720p` only for drafts, speed/cost-first work"),
-  "video Skill must limit 720p to draft or cost-first work");
+check(videoSkill.includes("Pass `resolution` only when declared"),
+  "video Skill must not invent video resolution fields");
+check(videoSkill.includes("If the model declares `aspect_ratio`") && videoSkill.includes("omit it"),
+  "image-to-video must distinguish a declared optional ratio from an undeclared field");
+for (const parameter of [
+  "prefer_multi_shots",
+  "enable_audio",
+  "enable_asmr",
+  "audio_prompt",
+  "music_prompt",
+  "keepOriginalSound",
+]) {
+  check(videoSkill.includes(parameter), `video Skill is missing intent mapping for ${parameter}`);
+}
 
 const skillCorpus = requiredFiles
   .filter((path) => path.startsWith("skills/") && path.endsWith(".md"))
@@ -156,17 +172,20 @@ for (const capability of [
   "image_to_video",
   "motion_control",
   "query_tasks",
-  "file_upload",
   "motion_library_list",
   "element_create",
   "element_list",
   "element_get",
   "element_update",
   "element_delete",
+  "feedback",
 ]) {
   check(skillCorpus.includes(capability), `skills are missing the MCP capability contract: ${capability}`);
 }
 const modelSnapshot = readExisting("skills/kling-ai-plugin/references/model-parameters.md");
+check(modelSnapshot.includes("Closed parameter rules"), "Global model snapshot must define closed allowlist rules");
+check(modelSnapshot.includes("use neither when the selected model omits it"),
+  "Global model snapshot must forbid undeclared resolution fields");
 for (const parameter of [
   "model",
   "prompt",
@@ -185,6 +204,11 @@ for (const parameter of [
   check(modelSnapshot.includes(parameter), `Global model parameter snapshot is missing: ${parameter}`);
 }
 const mcpContract = readExisting("skills/kling-ai-plugin/references/mcp-contract.md");
+check(mcpContract.includes("only top-level fields allowed"), "MCP contract must restrict top-level generation fields");
+check(mcpContract.includes("Never send undeclared fields"), "MCP contract must reject fields outside the live model schema");
+check(mcpContract.includes("Immediately before using an older Kling result")
+  && mcpContract.includes("Do not repeat the query"),
+"MCP contract must refresh historical resources once and stop on repeated failure");
 for (const outputField of [
   "generationId",
   "status",
@@ -193,9 +217,6 @@ for (const outputField of [
   "finishTime",
   "works[]",
   "urlWithoutWatermark",
-  "ticket",
-  "uploadUrl",
-  "expireAt",
   "membershipType",
   "availableRemainCredits",
   "motionUrl",
@@ -205,6 +226,60 @@ for (const outputField of [
 ]) {
   check(mcpContract.includes(outputField), `Global MCP output contract is missing: ${outputField}`);
 }
+
+check(!skillCorpus.includes("file_upload"), "Global skills must not recommend the unavailable file_upload workflow");
+check(!videoSkill.includes("`4:5`"), "video Skill must not recommend a ratio absent from the Global video schema");
+
+const toolWorkflow = readExisting("skills/kling-ai-plugin/references/tool-workflows.md");
+check(toolWorkflow.includes("only after the previous task succeeds")
+  && toolWorkflow.includes("terminate the dependent chain"),
+"dependent cross-media work must continue only after a successful usable predecessor");
+for (const path of [
+  "skills/kling-ai-generate-image/references/scene-patterns.md",
+  "skills/kling-ai-generate-video/references/scene-patterns.md",
+]) {
+  check(readExisting(path).includes("do not replace an authorized generation with a proposal"),
+    `${path} must not stop generation to offer unsolicited concepts`);
+}
+
+const prevention = readExisting("skills/kling-ai-plugin/references/failure-prevention.md");
+for (const errorType of [
+  "PointNotEnough",
+  "InvalidParameter",
+  "RateLimitExceeded",
+  "ResourceNotFound",
+  "MembershipQueueLimit",
+  "Unauthorized",
+  "MembershipNeed",
+  "InvalidArguments",
+  "Copyright",
+  "Unknown",
+  "GenImageOther",
+  "MOTION.DURATION_MORE_THAN_EXPECTED",
+  "POther",
+  "FileUploadFailed",
+  "MOTION.PIC_NOT_MATCHED",
+  "MOTION.RESOLUTION_TOO_SMALL",
+  "UnsupportedFileType",
+  "ImageSize",
+  "Unexpected",
+  "ImageTaskDisallowsVideoElement",
+  "AioImageRatio",
+  "FileTooLarge",
+  "MOTION.DURATION_LESS",
+  "RiskUnauthorized",
+  "BehaviorRiskPOther",
+  "ImageRatio",
+  "ElementNotBelongToUser",
+  "TaskSubmitFailed",
+  "InvalidBucketName",
+]) {
+  check(prevention.includes(errorType), `failure-prevention gates are missing ${errorType}`);
+}
+const troubleshooting = readExisting("skills/kling-ai-plugin/references/troubleshooting.md");
+check(troubleshooting.includes("requires a `generationId`")
+  && troubleshooting.includes("recover the unknown"),
+"unknown submissions must require generationId instead of undocumented task search");
 
 const englishUserFacingFiles = requiredFiles.filter((path) => path.endsWith(".md"));
 for (const path of englishUserFacingFiles) {

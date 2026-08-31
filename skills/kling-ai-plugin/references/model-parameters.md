@@ -4,6 +4,23 @@ Audit date: 2026-08-19. Source: live `who_am_i.availableModels` from `https://kl
 
 This is a complete verification snapshot, not a permanent source of truth. Call `who_am_i` again before submission and use current values when models, defaults, allowed values, required fields, or inputs change. Every `arguments[].value` is sent as a string, including booleans and JSON arrays.
 
+## Closed parameter rules
+
+- Select the tool and canonical model first. Treat only that model's current `arguments[]` and `inputs[]` as allowed; a field valid for another model is invalid here.
+- Top-level generation fields are limited to `model`, `arguments`, `inputs`, `rationale`, and `taskTraceId`. Put `prompt`, resolution, duration, ratio, count, audio, and shot settings in `arguments[]` only when declared.
+- Fill required arguments. Preserve a declared default unless the user requested, or the specialized Skill reliably inferred, another allowed value. Optional fields without defaults are omitted unless the request needs them.
+- Validate exact enum spelling, ranges, `maxItems`, unique argument/input names, and string conversion. Omit `inputs` when none are declared. Rebuild both arrays from empty after switching models.
+- Never invent `size`, `width`, `height`, `fps`, a generic `quality`, or a “balanced” tier. `img_resolution` is an image parameter and `resolution` is a video parameter; use neither when the selected model omits it.
+- Use the model's exact input names. `image_1`, `first_image`, `tail_image`, and `image` represent different contracts and are not interchangeable.
+- For image-to-video, pass `aspect_ratio` when the selected model declares it and the destination/source implies a legal value; omit it only when the model does not declare the field.
+
+## Known Global schema conflicts
+
+- The tool-level contract forbids Elements for `text_to_image` and `text_to_video` even when a model entry advertises `elements`; enforce the stricter tool rule.
+- `kling-image-v2_1` descriptions require matching `raw_subject_image_N` fields, but the captured inputs omit them. Do not guess a request until the live schema resolves the conflict.
+- Some host `tools/list` responses omit `motion_control` even when `who_am_i` advertises it. Call it only when present in the current tool list.
+- A higher runtime `mcpVersion` alone is not an error. Use the live schema when it fully describes the call, and refresh the host only for an actual tool/schema mismatch.
+
 ## Complete input-name index
 
 - Multi-image references: `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `image_6`, `image_7`, `image_8`, `image_9`, `image_10`.

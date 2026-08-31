@@ -47,12 +47,12 @@ Choose one primary pattern. Combine patterns only when the duration and live sch
 ## Social formats
 
 - **9:16 reel/short:** immediate visual hook, central vertical action, face/product in upper two-thirds, UI-safe lower area.
-- **1:1 or 4:5 feed:** medium framing, readable silhouette, restrained lateral movement.
+- **1:1 square feed:** medium framing, readable silhouette, restrained lateral movement. Use another feed ratio only when it appears in the selected video model's live allowed values.
 - **16:9 campaign/YouTube:** wider geography, stronger entrances/reveals, intentional negative space.
 
 ## Concept suggestions
 
-When the user asks for ideas, offer three distinct directions:
+Only when the user explicitly requests brainstorming, multiple options, or creative directions, offer three distinct directions. If the user already requested generation and did not ask to review concepts first, choose the best-fit route internally and continue; do not replace an authorized generation with a proposal:
 
 1. Demonstration — clearly show what happens or how the product works.
 2. Emotion — focus on a human reaction, atmosphere, or transformation.
