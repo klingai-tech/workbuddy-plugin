@@ -59,6 +59,10 @@ check(connector.description_en === connector.description
 "localized descriptions must include matching English and non-empty Chinese values");
 check(typeof packageJson.description === "string" && packageJson.description.length > 0,
   "package must include a description");
+check(packageJson.description === connector.description,
+  "package and connector descriptions must match");
+check(!/\p{Script=Han}/u.test(packageJson.description),
+  "primary Global package description must use English only");
 check(typeof packageJson.description_zh === "string" && packageJson.description_zh.length > 0,
   "package must include a localized Chinese description");
 check(mcp.mcpServers?.["kling-ai-plugin"]?.url === "https://kling.ai/mcp", "unexpected Kling Global MCP URL");
@@ -91,21 +95,20 @@ for (const forbidden of [
 
 check(!readdirSync(root).some((path) => /^mcp\..+\.json$/.test(path)), "connector release must not contain alternate MCP templates");
 
-if (!existsSync(join(root, ".git"))) {
-  const macOSMetadata = [];
-  const scanMacOSMetadata = (directory, relativeDirectory = "") => {
-    for (const entry of readdirSync(directory, { withFileTypes: true })) {
-      const relativePath = join(relativeDirectory, entry.name);
-      if (entry.name === ".DS_Store" || entry.name.startsWith("._") || entry.name === "__MACOSX") {
-        macOSMetadata.push(relativePath);
-        continue;
-      }
-      if (entry.isDirectory()) scanMacOSMetadata(join(directory, entry.name), relativePath);
+const macOSMetadata = [];
+const scanMacOSMetadata = (directory, relativeDirectory = "") => {
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    if (!relativeDirectory && entry.name === ".git") continue;
+    const relativePath = join(relativeDirectory, entry.name);
+    if (entry.name === ".DS_Store" || entry.name.startsWith("._") || entry.name === "__MACOSX") {
+      macOSMetadata.push(relativePath);
+      continue;
     }
-  };
-  scanMacOSMetadata(root);
-  check(macOSMetadata.length === 0, `release must not contain macOS metadata: ${macOSMetadata.join(", ")}`);
-}
+    if (entry.isDirectory()) scanMacOSMetadata(join(directory, entry.name), relativePath);
+  }
+};
+scanMacOSMetadata(root);
+check(macOSMetadata.length === 0, `release must not contain macOS metadata: ${macOSMetadata.join(", ")}`);
 
 for (const { directory, name } of [
   { directory: "kling-ai-plugin", name: "kling-ai" },
