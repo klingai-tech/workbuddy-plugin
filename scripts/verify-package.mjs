@@ -85,21 +85,20 @@ for (const forbidden of [
 
 check(!readdirSync(root).some((path) => /^mcp\..+\.json$/.test(path)), "connector release must not contain alternate MCP templates");
 
-if (!existsSync(join(root, ".git"))) {
-  const macOSMetadata = [];
-  const scanMacOSMetadata = (directory, relativeDirectory = "") => {
-    for (const entry of readdirSync(directory, { withFileTypes: true })) {
-      const relativePath = join(relativeDirectory, entry.name);
-      if (entry.name === ".DS_Store" || entry.name.startsWith("._") || entry.name === "__MACOSX") {
-        macOSMetadata.push(relativePath);
-        continue;
-      }
-      if (entry.isDirectory()) scanMacOSMetadata(join(directory, entry.name), relativePath);
+const macOSMetadata = [];
+const scanMacOSMetadata = (directory, relativeDirectory = "") => {
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    if (!relativeDirectory && entry.name === ".git") continue;
+    const relativePath = join(relativeDirectory, entry.name);
+    if (entry.name === ".DS_Store" || entry.name.startsWith("._") || entry.name === "__MACOSX") {
+      macOSMetadata.push(relativePath);
+      continue;
     }
-  };
-  scanMacOSMetadata(root);
-  check(macOSMetadata.length === 0, `release must not contain macOS metadata: ${macOSMetadata.join(", ")}`);
-}
+    if (entry.isDirectory()) scanMacOSMetadata(join(directory, entry.name), relativePath);
+  }
+};
+scanMacOSMetadata(root);
+check(macOSMetadata.length === 0, `release must not contain macOS metadata: ${macOSMetadata.join(", ")}`);
 
 for (const { directory, name } of [
   { directory: "kling-ai-plugin", name: "kling-ai" },
