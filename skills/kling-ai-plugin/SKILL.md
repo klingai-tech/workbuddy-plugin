@@ -1,11 +1,11 @@
 ---
 name: kling-ai
-description: Generate professional, cinematic images and videos through Kling AI in WorkBuddy. Routes natural-language requests into precise T2I, I2I, T2V, or I2V prompts for posters, ads, product visuals, and short films.
+description: Generate professional, cinematic images and videos through Kling AI in WorkBuddy. Routes natural-language requests into precise T2I, I2I, T2V, or I2V prompts for posters, ads, product visuals, and short films. Also handles subject-library (Element) creation, browsing, updates, deletion and reuse, motion-library queries, motion control, asset upload, credits, and task status.
 ---
 
 # Kling AI
 
-Use the configured Kling MCP server at `https://kling.ai/mcp`.
+Use the configured Kling MCP server at `https://kling.ai/mcp/plugin`.
 
 ## Route specialized generation
 
@@ -26,7 +26,7 @@ For any generation with images, select the tool and model first, then map media 
 - Discover the live remote tools and schemas at runtime; the provider schema overrides examples in this Skill.
 - If submission returns a non-terminal state, poll with the status tool declared by the live schema at provider-allowed intervals until the task succeeds or fails. Stop only if the user cancels or the current turn times out; then return the current state and task number.
 
-Load references by request type. For a single image or video generation, route to the specialized Skill without rereading shared files here. For cross-media work, first read [the paid-task workflow](references/tool-workflows.md); at each paid stage, the specialized Skill reads [the MCP contract](references/mcp-contract.md), [the Global model snapshot](references/model-parameters.md), and [failure-prevention gates](references/failure-prevention.md). Account, credit, and status queries use live tool descriptions only. Read [troubleshooting](references/troubleshooting.md) only after an authorization, schema, media-intake, or provider error.
+Load references by request type. For a single image or video generation, route to the specialized Skill without rereading shared files here. For cross-media work, first read [the paid-task workflow](references/tool-workflows.md); at each paid stage, the specialized Skill reads [the MCP contract](references/mcp-contract.md), [the Global model snapshot](references/model-parameters.md), and [failure-prevention gates](references/failure-prevention.md). Account, credit, and status queries use live tool descriptions only. For subject-library operations, motion-library queries, and local upload, read [asset workflows](references/asset-workflows.md) and the MCP contract. Read [troubleshooting](references/troubleshooting.md) only after an authorization, schema, media-intake, or provider error.
 
 ## OAuth client identity
 
@@ -34,9 +34,9 @@ Before OAuth dynamic client registration, include `client_name: "Plugin-WorkBudd
 
 ## Workflow
 
-1. Identify generation, motion control, Element management, account mutation, or a read-only query. For cross-media work, split only the paid stages the user requested and apply the corresponding specialized workflow to each.
+1. Identify generation, motion control, subject-library management, motion-library browsing, local upload, account mutation, or a read-only query. Complete standalone asset operations through the asset workflow and return directly; model selection, credits, submission, and polling below apply only to generation. For cross-media work, split only the paid stages the user requested and apply the corresponding specialized workflow to each.
 2. Read the current `tools/list`; before generation or motion control, call `who_am_i`. A higher `mcpVersion` alone is not a reason to block or restart repeatedly. Continue when the current tools and live model schema fully describe the call; request a host restart and a fresh session only if the target tool is absent, the top-level schema conflicts with the model schema, or the host explicitly reports stale tools. Immediately before each paid submission, call `query_membership_and_credits` and stop when it clearly reports no or insufficient credits.
-3. For images, prefer a host-provided reference accepted by the selected model. For any older Kling output, ignore saved URLs and immediately before reuse call `query_tasks` once with its `generationId`; select the bound `works[]` index and `contentType`, then use that fresh URL in the same turn.
+3. For images, prefer a host-provided reference accepted by the selected model. If a local file has no usable reference, check conditional two-step upload in the asset workflow. For any older Kling output, ignore saved URLs and immediately before reuse call `query_tasks` once with its `generationId`; select the bound `works[]` index and `contentType`, then use that fresh URL in the same turn.
 4. Ask only for missing creative facts or settings that materially change the result.
 5. Select the tool and model before constructing the request. Treat the selected model's live `arguments[]` and `inputs[]` as closed allowlists; validate the canonical model, required fields, defaults, enums, limits, and exact input names. Never send undeclared fields, and rebuild the request from empty after switching models.
 6. Call each explicitly authorized paid generation exactly once. Keep at most one non-terminal paid task for one user objective; wait for terminal state before starting another distinct task. Discovery, credits, and attachment interpretation are preparation steps, not a substitute for an authorized generation when inputs are complete.

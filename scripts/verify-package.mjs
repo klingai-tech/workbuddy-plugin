@@ -22,6 +22,7 @@ const requiredFiles = [
   "skills/kling-ai-plugin/SKILL.md",
   "skills/kling-ai-plugin/references/failure-prevention.md",
   "skills/kling-ai-plugin/references/mcp-contract.md",
+  "skills/kling-ai-plugin/references/asset-workflows.md",
   "skills/kling-ai-plugin/references/model-parameters.md",
   "skills/kling-ai-plugin/references/tool-workflows.md",
   "skills/kling-ai-plugin/references/troubleshooting.md",
@@ -65,7 +66,7 @@ check(!/\p{Script=Han}/u.test(packageJson.description),
   "primary Global package description must use English only");
 check(typeof packageJson.description_zh === "string" && packageJson.description_zh.length > 0,
   "package must include a localized Chinese description");
-check(mcp.mcpServers?.["kling-ai-plugin"]?.url === "https://kling.ai/mcp", "unexpected Kling Global MCP URL");
+check(mcp.mcpServers?.["kling-ai-plugin"]?.url === "https://kling.ai/mcp/plugin", "unexpected Kling Global MCP URL");
 check(mcp.mcpServers?.["kling-ai-plugin"]?.type === "http", "Kling MCP transport must be http");
 check(Object.keys(mcp.mcpServers ?? {}).join() === "kling-ai-plugin", "only kling-ai-plugin may be registered");
 check(packageJson.license === "MIT", "package license must be MIT");
@@ -175,6 +176,7 @@ for (const capability of [
   "image_to_video",
   "motion_control",
   "query_tasks",
+  "file_upload",
   "motion_library_list",
   "element_create",
   "element_list",
@@ -230,7 +232,10 @@ for (const outputField of [
   check(mcpContract.includes(outputField), `Global MCP output contract is missing: ${outputField}`);
 }
 
-check(!skillCorpus.includes("file_upload"), "Global skills must not recommend the unavailable file_upload workflow");
+const assetWorkflow = readExisting("skills/kling-ai-plugin/references/asset-workflows.md");
+check(assetWorkflow.includes("Only use `file_upload` when it exists in the current Global `tools/list`")
+  && assetWorkflow.includes("multipart request"),
+"Global upload instructions must require live tool availability and host multipart support");
 check(!videoSkill.includes("`4:5`"), "video Skill must not recommend a ratio absent from the Global video schema");
 
 const toolWorkflow = readExisting("skills/kling-ai-plugin/references/tool-workflows.md");
@@ -288,8 +293,8 @@ const englishUserFacingFiles = requiredFiles.filter((path) => path.endsWith(".md
 for (const path of englishUserFacingFiles) {
   check(!/\p{Script=Han}/u.test(readExisting(path)), `${path} must use English in the Global package`);
 }
-check(!read("package.json").includes("https://kling.ai/mcp")
-  && !read("connector-meta.json").includes("https://kling.ai/mcp"),
+check(!read("package.json").includes("https://kling.ai/mcp/plugin")
+  && !read("connector-meta.json").includes("https://kling.ai/mcp/plugin"),
 "Global package metadata must not reference the China endpoint");
 
 for (const path of requiredFiles.filter((path) => path.endsWith(".md"))) {

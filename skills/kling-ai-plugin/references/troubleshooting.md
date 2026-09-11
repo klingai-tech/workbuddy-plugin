@@ -17,7 +17,7 @@ Kling protected-resource metadata.
 ## Media intake or image-to-video fails
 
 - Refresh the live schema and select the model before mapping media.
-- Prefer a host-provided media reference only when the selected model accepts it.
+- Prefer a host-provided media reference only when the selected model accepts it. If a local file has none, check [asset workflows](asset-workflows.md) for live `file_upload` availability and host multipart support. Receiving a ticket is not upload completion; never use the upload address or a local path as the final media URL.
 - Preserve the same `taskTraceId` across media preparation and generation.
 - Use only the input names, value types, and reference roles declared by the
   selected model. Never interchange `image_1`, `first_image`, `tail_image`, or

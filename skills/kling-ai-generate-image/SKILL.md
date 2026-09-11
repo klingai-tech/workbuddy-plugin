@@ -1,11 +1,11 @@
 ---
 name: kling-ai-generate-image
-description: Optimize natural-language briefs into precise prompts and generate professional, cinematic images through Kling AI in WorkBuddy. Supports T2I, I2I, posters, product photography, ads, and reference-image editing.
+description: Optimize natural-language briefs into precise prompts and generate professional, cinematic images through Kling AI in WorkBuddy. Supports T2I, I2I, posters, product photography, ads, reference-image editing, and Element subject reuse.
 ---
 
 # Kling AI Image Generation
 
-Turn a creative brief into one well-specified Kling image request. Use only the live tools and schemas from the configured MCP at `https://kling.ai/mcp`.
+Turn a creative brief into one well-specified Kling image request. Use only the live tools and schemas from the configured MCP at `https://kling.ai/mcp/plugin`.
 
 ## Contract
 
@@ -16,6 +16,8 @@ Turn a creative brief into one well-specified Kling image request. Use only the 
 - Prefer a host-provided image reference accepted by the selected model.
 
 Before submission, read the shared [paid-task workflow](../kling-ai-plugin/references/tool-workflows.md), [MCP contract](../kling-ai-plugin/references/mcp-contract.md), [Global model snapshot](../kling-ai-plugin/references/model-parameters.md), and [failure-prevention gates](../kling-ai-plugin/references/failure-prevention.md), then let current `tools/list` and `who_am_i` override dynamic values. Read [troubleshooting](../kling-ai-plugin/references/troubleshooting.md) only after an authorization, schema, media-intake, or provider error.
+
+For Element reuse, motion-library selection where relevant, or local uploads, first read [asset workflows](../kling-ai-plugin/references/asset-workflows.md). Resolve subject types and bindings or a real motion ID before generation; a library-only request returns through the core Skill without generation.
 
 ## Workflow
 
@@ -48,7 +50,7 @@ you need the user to clarify a missing creative requirement.
 ## Image-input validation
 
 - Select the exact `image_to_image` model before mapping media to names declared in its current schema. Never substitute another tool's `image` or `first_image` for `image_1`; rebuild all inputs after changing models.
-- Prefer a host-provided reference accepted by the selected model. Never put a local path in `inputs[]` or mention an image URL only in the prompt as a substitute for a structured input. If the host cannot supply an accepted reference, explain the limitation and stop.
+- Prefer a host-provided reference accepted by the selected model. Never put a local path in `inputs[]` or mention an image URL only in the prompt as a substitute for a structured input. If no accepted reference is available, check the asset workflow for conditional two-step upload; stop and explain the limitation if it remains unavailable.
 - For an older Kling result, ignore the URL saved in conversation. Immediately before submission, call `query_tasks` once using the bound `generationId`, select the saved `works[]` index and `contentType`, and use the fresh URL. If the task number or work binding is missing, refresh fails, the model rejects the source, or the fresh URL is still missing, ask the user to attach the image again; do not query repeatedly or try other old URLs.
 - Before submission, confirm that `model` is present, all required inputs exist, reference count is within the live limit, input names are unique and declared, and every URL source is accepted by the selected model.
 

@@ -1,15 +1,18 @@
 # Kling AI Global for WorkBuddy
 
 Kling AI connects WorkBuddy to the official OAuth-protected Kling MCP service
-for image and video creation.
+for image and video creation, reusable subject management, and motion-library browsing.
 
 This package uses only the Global Kling MCP endpoint configured in `mcp.json`:
-`https://kling.ai/mcp`.
+`https://kling.ai/mcp/plugin`.
 
 ## Capabilities
 
 - Text-to-image and image-to-image generation
 - Text-to-video and image-to-video generation
+- Subject library (Elements): create, browse, inspect, update, delete, and reuse subjects
+- Motion-library browsing and motion control from a saved motion or reference video
+- Two-step local asset upload when supported by the current Global MCP and host
 - Credit and task-status queries
 - Generation progress tracking and result delivery
 
@@ -35,6 +38,12 @@ results include the primary image, video, or result link supplied by Kling.
 Temporary result links can be refreshed by querying the original task number;
 the work also remains available in the authorized account's Kling generation
 history.
+
+Try "Save these front and side views as my first reusable character, Alice",
+"List my subject library", or "Browse my saved motions, then apply the one I select
+to this subject image". Browsing libraries only reads assets; applying a subject
+or motion to generation creates a paid task. Available tools and models depend
+on the current account and live Global capabilities.
 
 ## License
 

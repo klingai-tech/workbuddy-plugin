@@ -4,6 +4,8 @@ Audit date: 2026-08-19. Source: live `who_am_i.availableModels` from `https://kl
 
 This is a complete verification snapshot, not a permanent source of truth. Call `who_am_i` again before submission and use current values when models, defaults, allowed values, required fields, or inputs change. Every `arguments[].value` is sent as a string, including booleans and JSON arrays.
 
+The current plugin connects to `https://kling.ai/mcp/plugin`. The audit above records the previous endpoint; obtain current capabilities from the configured plugin endpoint before use.
+
 ## Closed parameter rules
 
 - Select the tool and canonical model first. Treat only that model's current `arguments[]` and `inputs[]` as allowed; a field valid for another model is invalid here.

@@ -1,11 +1,11 @@
 ---
 name: kling-ai-generate-video
-description: Optimize natural-language briefs into precise motion prompts and generate professional, cinematic videos through Kling AI in WorkBuddy. Supports T2V, I2V, motion control, product demos, ads, short films, and social content.
+description: Optimize natural-language briefs into precise motion prompts and generate professional, cinematic videos through Kling AI in WorkBuddy. Supports T2V, I2V, Element subject reuse, motion control from saved motions or reference videos, product demos, ads, short films, and social content.
 ---
 
 # Kling AI Video Generation
 
-Translate a user brief into a coherent Kling motion plan and one approved remote generation request. Use only live tools and schemas from the configured MCP at `https://kling.ai/mcp`.
+Translate a user brief into a coherent Kling motion plan and one approved remote generation request. Use only live tools and schemas from the configured MCP at `https://kling.ai/mcp/plugin`.
 
 ## Contract
 
@@ -16,6 +16,8 @@ Translate a user brief into a coherent Kling motion plan and one approved remote
 - Prefer a host-provided image reference accepted by the selected model.
 
 Before submission, read the shared [paid-task workflow](../kling-ai-plugin/references/tool-workflows.md), [MCP contract](../kling-ai-plugin/references/mcp-contract.md), [Global model snapshot](../kling-ai-plugin/references/model-parameters.md), and [failure-prevention gates](../kling-ai-plugin/references/failure-prevention.md), then let current `tools/list` and `who_am_i` override dynamic values. Read [troubleshooting](../kling-ai-plugin/references/troubleshooting.md) only after an authorization, schema, media-intake, or provider error.
+
+For Element reuse, motion-library selection where relevant, or local uploads, first read [asset workflows](../kling-ai-plugin/references/asset-workflows.md). Resolve subject types and bindings or a real motion ID before generation; a library-only request returns through the core Skill without generation.
 
 ## Workflow
 
@@ -58,7 +60,7 @@ creative requirement.
 ## Image-input validation
 
 - Select the exact `image_to_video` or `motion_control` model before mapping media to its current input names. `image_1`, `first_image`, `tail_image`, and `image` are not interchangeable; rebuild both inputs and arguments after changing models.
-- Prefer a host-provided reference accepted by the selected model. Never put a local path directly in `inputs[]`. If the host cannot provide an accepted reference, explain the limitation and stop.
+- Prefer a host-provided reference accepted by the selected model. Never put a local path directly in `inputs[]`. If no accepted reference is available, check the asset workflow for conditional two-step upload; stop and explain the limitation if it remains unavailable.
 - For an older Kling output, ignore the saved URL. Immediately before submission, call `query_tasks` once using the bound `generationId`, select the saved `works[]` index and `contentType`, and use the fresh URL. If task/work identity is missing, refresh fails, the model rejects the source, or the fresh URL is still missing, ask the user to attach the image again; do not query repeatedly or try old URLs.
 - Before submission, require `model` and validate all required inputs, duration, and resolution against the selected live schema. `1080p` is a `resolution` value only when allowed; never pass it as `img_resolution`.
 
