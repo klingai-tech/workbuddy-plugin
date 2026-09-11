@@ -7,7 +7,7 @@
   "description_en": "Turn every idea into a striking image or video. Kling AI is an AI image and video generator for creators. In WorkBuddy, use natural language for text-to-image, image-to-image, text-to-video, image-to-video, and single-shot or multi-shot video. Create posters, illustrations, portraits, product photos, e-commerce hero images, product listing images, product detail images, ad creatives, product showcase videos, marketing clips, e-commerce short videos, social media videos, and cinematic content for Taobao, Tmall, JD.com, Pinduoduo, Douyin, Kuaishou, Xiaohongshu, TikTok, Amazon, Shopify, and more. Browse the subject library (Elements), view subject details, and create, update, delete, or reuse subjects. Browse and preview the motion library, then apply a saved motion or reference video to a subject image for motion-controlled video generation. Upload reference images, check remaining credits, submit generation jobs, track progress, check task status, and download final images or videos. Looking for similar AI generators or alternatives like Hailuo AI, Seedance, Vidu, Jimeng, Runway, Pika, Sora, or Veo? Use Kling AI to build a high-quality Kling MCP creative workflow.",
   "source": "kling-ai-plugin",
   "type": "mcp",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "examples_zh": [
     "使用可灵AI画一只坐在霓虹屋顶上的赛博朋克风格猫",
     "使用可灵AI画一只身穿复古宇航服的小熊猫，漂浮在空间站舷窗前，地球蓝光映亮面部，细节丰富，电影级质感",
