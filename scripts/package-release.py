@@ -9,6 +9,13 @@ from zipfile import ZIP_DEFLATED, ZipFile
 ROOT = Path(__file__).resolve().parent.parent
 
 
+def is_macos_metadata(path):
+    return any(
+        part in {".DS_Store", "__MACOSX"} or part.startswith("._")
+        for part in Path(path).parts
+    )
+
+
 def release_files(package):
     paths = {ROOT / "package.json"}
     for item in package["files"]:
@@ -17,7 +24,7 @@ def release_files(package):
             paths.add(path)
         elif path.is_dir():
             paths.update(candidate for candidate in path.rglob("*") if candidate.is_file())
-    return sorted(paths)
+    return sorted(path for path in paths if not is_macos_metadata(path.relative_to(ROOT)))
 
 
 def main():
@@ -34,9 +41,7 @@ def main():
     with ZipFile(temporary_archive) as output:
         forbidden = [
             name for name in output.namelist()
-            if "/__MACOSX/" in f"/{name}"
-            or Path(name).name == ".DS_Store"
-            or Path(name).name.startswith("._")
+            if is_macos_metadata(name)
         ]
         if forbidden:
             temporary_archive.unlink()
