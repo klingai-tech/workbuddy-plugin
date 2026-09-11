@@ -21,6 +21,7 @@ const requiredFiles = [
   "LICENSE",
   "skills/kling-ai-plugin/SKILL.md",
   "skills/kling-ai-plugin/references/mcp-contract.md",
+  "skills/kling-ai-plugin/references/asset-workflows.md",
   "skills/kling-ai-plugin/references/model-parameters.md",
   "skills/kling-ai-plugin/references/failure-prevention.md",
   "skills/kling-ai-plugin/references/tool-workflows.md",
@@ -55,7 +56,7 @@ check(connector.description === packageJson.description, "connector description 
 check(connector.description_zh === packageJson.description_zh
   && connector.description_en === connector.description,
 "localized descriptions must match the corresponding package and connector descriptions");
-check(mcp.mcpServers?.["kling-ai-plugin"]?.url === "https://klingai.com/mcp", "unexpected Kling MCP URL");
+check(mcp.mcpServers?.["kling-ai-plugin"]?.url === "https://klingai.com/mcp/plugin", "unexpected Kling MCP URL");
 check(mcp.mcpServers?.["kling-ai-plugin"]?.type === "http", "Kling MCP transport must be http");
 check(Object.keys(mcp.mcpServers ?? {}).join() === "kling-ai-plugin", "only kling-ai-plugin may be registered");
 check(packageJson.license === "MIT", "package license must be MIT");
@@ -139,6 +140,7 @@ for (const capability of [
   "image_to_video",
   "motion_control",
   "query_tasks",
+  "file_upload",
   "motion_library_list",
   "element_create",
   "element_list",
@@ -295,8 +297,8 @@ const chineseUserFacingFiles = requiredFiles.filter((path) => path.endsWith(".md
 for (const path of chineseUserFacingFiles) {
   check(/\p{Script=Han}/u.test(readExisting(path)), `${path} must use Chinese in the China package`);
 }
-check(!read("package.json").includes("https://klingai.com/mcp")
-  && !read("connector-meta.json").includes("https://klingai.com/mcp"),
+check(!read("package.json").includes("https://klingai.com/mcp/plugin")
+  && !read("connector-meta.json").includes("https://klingai.com/mcp/plugin"),
 "China package metadata must not reference the Global endpoint");
 
 for (const path of requiredFiles.filter((path) => path.endsWith(".md"))) {
