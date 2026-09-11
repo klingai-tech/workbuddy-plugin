@@ -1,5 +1,5 @@
 ---
-name: kling-ai
+name: kling-ai-plugin
 description: 当用户希望通过 WorkBuddy 中的 Kling AI 连接器生成影视级、专业级图像或视频时使用。将自然语言需求路由为适配文生图、图生图、文生视频或图生视频的精确提示词，适合海报、广告、产品视觉和短片等创作场景；也用于主体库（Element）的创建、查看、更新、删除与复用，动作库查询、动作控制、素材上传、账号额度和任务查询。
 ---
 
@@ -21,7 +21,6 @@ description: 当用户希望通过 WorkBuddy 中的 Kling AI 连接器生成影�
 ## 安全与提交约定
 
 - 只使用宿主的 MCP OAuth 连接流程。绝不索取 API Key，也不在日志中暴露凭证、Cookie、授权头、私有账号字段或签名 URL。
-- Before OAuth dynamic client registration, include `client_name: "Plugin-WorkBuddy"`. This is OAuth metadata, not a tool argument, URL parameter, or secret. If WorkBuddy cannot inject it, stop before authorization and report the limitation.
 - 用户提出单项生成请求，即表示在补齐会实质影响结果的缺失信息后，授权该收费生成步骤提交一次。跨媒体请求或用户明确要求多个不同任务时，把用户已明确要求的每个收费步骤分别视为一次授权；未明确要求的额外步骤必须先询问。不要额外增加灵感值消耗警告或单独确认步骤。
 - 每个明确授权的收费生成步骤最多提交一次。失败或结果不明确时，不要自动重试。
 - 运行时发现远程工具和模式定义；提供方的实时模式定义优先于本 Skill 的示例。

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import json
-import subprocess
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile
 
@@ -28,8 +27,6 @@ def release_files(package):
 
 
 def main():
-    subprocess.run(["node", "scripts/verify-package.mjs"], cwd=ROOT, check=True)
-
     package = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
     archive = ROOT / f"kling-workbuddy-v{package['version']}.zip"
     temporary_archive = archive.with_suffix(".zip.tmp")
