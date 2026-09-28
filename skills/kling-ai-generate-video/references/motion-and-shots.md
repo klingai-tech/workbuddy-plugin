@@ -2,6 +2,8 @@
 
 ## Motion-prompt principles
 
+Preserve a prompt verbatim when explicitly requested. Otherwise prioritize actual action and continuity, supported by light and materials, without stacking generic quality adjectives.
+
 - Lock user facts, opening state, identity, and product structure before defining allowed change.
 - Describe time in order: opening state → subject action → observable end state. Separate subject, camera, and environmental motion instead of using abstractions such as “dynamic scene.”
 - Keep only actions that fit the selected duration. Default to one subject action and one camera path; add environmental motion only when it reveals physical feedback such as wind, rain, dust, smoke, or liquid.
@@ -73,7 +75,7 @@ If actions, camera paths, or end states conflict, do not merge them silently. As
 - `handheld follow`: urgency or UGC authenticity; specify controlled versus energetic
 - `whip pan`: transition or impact; use sparingly and only with a clear landing subject
 
-Do not stack several camera verbs in a five-second shot.
+Prefer one dominant camera move in a short shot. For requested compound movement, specify sequence, direction, and endpoint rather than simultaneous conflicting camera instructions.
 
 Do not write an ambiguous “move quickly.” State who or what moves, in which direction, at what pace, and where it stops.
 
@@ -97,19 +99,15 @@ Continuity: preserve <anchors>; transition via <match/action/screen direction>.
 
 Keep the total duration consistent. Each shot should add information rather than repeat a prettier angle.
 
-## Reference handling
+Write action as starting pose → main change → settled state, leaving time to recognize the subject and result. Separate subject/prop directions from camera direction. Connect cuts through action, gaze, or composition rather than cramming a long story into a short shot. Align declared multi-shot parameters with prompt shot count and rhythm.
 
-- First-frame input: preserve composition and animate within it.
-- Multiple references: identify each role explicitly; do not treat all images as interchangeable style inputs.
-- Character continuity: lock face, age presentation, hair, wardrobe, proportions, and distinctive features.
-- Product continuity: lock dimensions, materials, label spelling, logo placement, and moving-part behavior.
+## Wording example
 
-## Motion-control assets
+For animating a product reference:
 
-- Keep the person or animal clearly visible in the subject image and match the body framing to the motion-source video when possible.
-- Use one continuous motion-source shot; avoid cuts, occlusion, extremely fast movement, or multiple competing subjects.
-- Kling's current official guide recommends a 3–30 second motion video, a short edge of at least 340 px, and a long edge no greater than 3850 px. Enforce any stricter live MCP schema constraint.
-- `motion_control` requires the subject `image` and exactly one of library `motionId` or input `video`. Use only direction, resolution, and original-sound fields declared by the current model in `who_am_i`.
+> Begin from the reference, preserving bottle shape, label, and liquid color. Track slowly sideways as soft rear-side light moves along the glass edge. Keep the bottle stable and the background gently defocused. End at an angle with a readable label; add no new text.
+
+This is a writing example, not a fixed request. Derive subject, duration, ratio, sound, reference syntax, and bindings from real assets and the selected model. If the user wants the product itself to move, change the action accordingly.
 
 ## Ads and explainers
 

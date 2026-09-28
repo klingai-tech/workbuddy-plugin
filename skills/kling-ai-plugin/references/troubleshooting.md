@@ -1,71 +1,60 @@
 # Troubleshooting
 
-## MCP tools are missing after installation
+## Missing MCP tools after installation
 
-Reload WorkBuddy and confirm that the `kling-ai-plugin` MCP
-server is enabled. If the tools still do not appear, restart the host and
-check its MCP diagnostics. Do not ask for an API key as a workaround.
+Reload WorkBuddy and confirm the connector's `kling-ai-plugin` server is enabled. If tools remain absent, restart the host and inspect MCP diagnostics. Do not substitute an API-key request.
 
-## Not authorized or not linked
+## Unauthorized or disconnected
 
-Open WorkBuddy's connector connection entry, select `kling-ai-plugin`, and complete
-the browser OAuth flow. WorkBuddy may show the connection under the connector
-details page or MCP settings. If OAuth returns `invalid_target`, do not invent
-an `oauth_resource` override; report the host diagnostic and verify the current
-Kling protected-resource metadata.
+Open WorkBuddy's connector connection entry, select Kling AI, and complete browser OAuth. WorkBuddy manages client registration; do not override it manually. For `invalid_target`, report host diagnostics and verify current protected-resource metadata instead of inventing an `oauth_resource` override.
 
-## Media intake or image-to-video fails
+## Model capability mismatch
 
-- Refresh the live schema and select the model before mapping media.
-- Prefer a host-provided media reference only when the selected model accepts it. If a local file has none, check [asset workflows](asset-workflows.md) for live `file_upload` availability and host multipart support. Receiving a ticket is not upload completion; never use the upload address or a local path as the final media URL.
-- Preserve the same `taskTraceId` across media preparation and generation.
-- Use only the input names, value types, and reference roles declared by the
-  selected model. Never interchange `image_1`, `first_image`, `tail_image`, or
-  `image`, and never put a local path directly in `inputs[]`.
-- If the media comes from an older Kling task, call `query_tasks` once immediately
-  before submission and use the fresh URL for the bound work index. If it still
-  fails, ask the user to attach the image again instead of trying old URLs.
+If the user says a requested model is enabled but complete `who_am_i` discovery does not return it, check the actual connector, endpoint/environment, generation entry points, and MCP version. Refresh the connection and rediscover. Membership and model rollout are separate; another client's result is comparison evidence, not authorization for this connection.
 
-## Task is still running
+If inconsistent after refresh, report that the current connection did not return the requested model and the cause remains under investigation. Retain sanitized endpoint, version, query parameters, and relevant returned models for diagnosis. Absence does not prove lack of entitlement. Do not automatically log out, switch accounts, guess model names, or silently submit an older model. Product/test documents describe expectations; live model constraints govern parameter conflicts.
 
-During the original generation turn, continue polling with the live status tool
-at intervals allowed by Kling until the task succeeds or fails. If the user
-cancels or the turn times out, return the task number; the task keeps running on
-Kling's side. A later explicit status request queries it once.
+## Upload or image-to-video failure
 
-## Generation fails
+- Refresh live definitions and check current upload tools and output fields.
+- Reuse returned upload references exactly. A ticket alone is not a completed upload; follow [asset workflows](asset-workflows.md).
+- Keep the same `taskTraceId` through preparation and generation when returned/required by the schema.
+- Use only declared input names, types, and roles. Do not assume `file_upload`, `first_image`, or string-only values exist for every tool.
 
-Return the provider's failure message and preserve the IDs for support. Do
-not automatically create a replacement task because that may consume credits
-again.
+## Task still running
 
-For an opaque failure, empty result, repeated validation failure, billing
-anomaly, or clearly unintended result, call `feedback` once using the live tool
-contract. Feedback does not authorize a replacement generation.
+Use [task results](task-results.md) to distinguish mounted widgets, generation without a widget, and standalone status queries. Keep the same task number without resubmission. If the widget cannot refresh, query at service-allowed intervals; return status and task number on query failure or turn completion.
+
+## No widget after generation
+
+Check that `_meta.ui.resourceUri` (or `_meta["ui/resourceUri"]`) points to a readable `ui://` resource with MIME type `text/html;profile=mcp-app`. The target WorkBuddy build must read resources, mount a sandboxed iframe, and deliver tool inputs/results. If unsupported or resource reading fails, deliver media or result links through the shared workflow, preserving requested multiple works. Do not copy a local `mcp-app/` or start a second server.
+
+## Generation failed
+
+Follow [task results](task-results.md), summarize failure, and retain IDs. Sanitize credentials and unavailable model names. Do not create an automatic replacement that could consume credits again.
+
+## Rate limiting or full queue
+
+Report the service message and stop. Do not wait and automatically retry paid generation or switch models to evade limits. Rate-limited status queries also end polling for this turn, retaining the task number.
 
 ## Insufficient credits
 
-Tell the user the balance is insufficient and ask them to recharge before
-trying again. Do not submit another paid generation until the user explicitly
-states that the balance changed.
+Use current `query_membership_and_credits` balance and service responses; monthly plan allowances are not current balance. Explain insufficiency and, if available, provide the recharge link actually returned for the current region. Do not retry automatically or misclassify insufficient credits as model incompatibility.
 
-## Rate limited or queue full
+## Membership and available capabilities
 
-Report the provider message and stop. Do not wait and retry automatically,
-switch models, alter parameters, or bypass the account queue. Status polling
-must continue to respect provider intervals.
+- For membership questions or explicit entitlement errors, consult the official membership page reached through the current Global service. Prices, promotions, and benefits depend on region/account; do not store price tables or fixed membership-to-model/spec mappings, and never purchase automatically.
+- Resolution, output count, subject-library capacity, concurrency, and generation channels are distinct benefits. Website entitlements do not establish every MCP entry point's capability. Do not promise an upgrade will expose missing models or proactively suggest upgrades during ordinary generation.
+- After a reported upgrade, reread relevant capabilities. If still absent, state current connection limitations. Check account/region alignment when needed without requesting credentials or replacing MCP authorization with browser login.
 
-## Submission timed out and task creation is unknown
+## Submission timeout with unknown creation state
 
-Do not retry the generation call. `query_tasks` requires a `generationId`; when
-one exists, query only that task. Without a `generationId`, neither
-`taskTraceId` nor an undocumented task-list filter can recover the unknown
-submission. Report the status as unknown and stop. Create a new paid task only
-after the user explicitly accepts the possible duplicate charge.
+Do not replay generation. Follow [task results](task-results.md) to recover a known task or report unknown. `taskTraceId` is not an idempotency key. If creation cannot be ruled out, a replacement requires explicit user acceptance of potential duplicate charges.
 
-## Result link expired
+## Expired result links
 
-Output URLs expire after 24 hours. Query the preserved `generationId` once to
-obtain a current URL for the bound `works[]` index, or view generation history
-while signed in. An expired URL does not mean the generated work was lost.
-Never log or treat a signed URL as a permanent asset identifier.
+Signed output URLs may expire. Query the retained `generationId` for a current URL, or use the authorized account's Kling generation history. Expiration does not imply the work is lost. Do not log signed URLs or treat them as permanent asset IDs. For reuse in generation, refresh once and stop if the resource remains unavailable as specified in [submission](tool-workflows.md).
+
+## Feedback
+
+When the user requests reporting an issue and live tools expose `feedback`, submit necessary sanitized error details and task number once using its schema. Exclude credentials, upload tickets, and signed URLs. Feedback does not retry, refund, or repair the original task; preserve its status.

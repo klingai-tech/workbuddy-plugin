@@ -28,10 +28,13 @@ into a conversation.
 
 ## Use
 
-Describe the image or video you want in natural language. Kling AI submits one
-generation task and checks it at service-allowed intervals until it succeeds or
-fails. If the current turn ends first, it returns a **task number** that can be
-used to query the same task later.
+Describe the image or video you want in natural language. When no model is
+specified, Kling AI prefers the newest suitable model available to the current
+account; otherwise it keeps the existing entry point and an available default
+model. Each authorized generation step is submitted once. A working result
+widget refreshes progress; otherwise Kling AI checks at service-allowed
+intervals until success or failure. If the current turn ends first, it returns
+a **task number** that can be used to query the same task later.
 
 If credits are insufficient, recharge the Kling account and try again. Completed
 results include the primary image, video, or result link supplied by Kling.

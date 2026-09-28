@@ -7,23 +7,23 @@
   "description_en": "Turn every idea into a striking image or video. Kling AI is an AI image and video generator for creators. In WorkBuddy, use natural language for text-to-image, image-to-image, text-to-video, image-to-video, and single-shot or multi-shot video. Create posters, illustrations, portraits, product photos, e-commerce hero images, product listing images, product detail images, ad creatives, product showcase videos, marketing clips, e-commerce short videos, social media videos, and cinematic content for Taobao, Tmall, JD.com, Pinduoduo, Douyin, Kuaishou, Xiaohongshu, TikTok, Amazon, Shopify, and more. Browse the subject library (Elements), view subject details, and create, update, delete, or reuse subjects. Browse and preview the motion library, then apply a saved motion or reference video to a subject image for motion-controlled video generation. Upload reference images, check remaining credits, submit generation jobs, track progress, check task status, and download final images or videos. Looking for similar AI generators or alternatives like Hailuo AI, Seedance, Vidu, Jimeng, Runway, Pika, Sora, or Veo? Use Kling AI to build a high-quality Kling MCP creative workflow.",
   "source": "kling-ai-plugin",
   "type": "mcp",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "examples_zh": [
-    "使用可灵AI画一只坐在霓虹屋顶上的赛博朋克风格猫",
-    "使用可灵AI画一只身穿复古宇航服的小熊猫，漂浮在空间站舷窗前，地球蓝光映亮面部，细节丰富，电影级质感",
-    "使用可灵AI制作一段 5 秒电影感视频：机甲战士从高空重砸地面，冲击波瞬间震开碎石与尘雾，镜头快速推近，充满力量感",
-    "使用可灵AI制作一条 15 秒运动鞋营销短片：街头开场抓住注意力，三秒切出产品特写与穿着动态，结尾落在鞋身细节特写",
-    "使用可灵AI绘制一幅古风武侠人物，身着白衣，手持长剑，立于山巅之上，云雾缭绕，夕阳余晖映照，画面唯美，细节精致",
-    "使用可灵AI查看动作库，预览已保存的动作；选定后，将该动作应用到我提供的主体图片生成视频",
-    "使用可灵AI将我提供的角色正面图和侧面图保存为第一个可复用主体，命名为“小白”，方便后续创作时保持角色一致"
+    "使用可灵AI最新模型画一只坐在霓虹屋顶上的赛博朋克风格猫",
+    "使用可灵AI最新模型画一只身穿复古宇航服的小熊猫，漂浮在空间站舷窗前，地球蓝光映亮面部，细节丰富，电影级质感",
+    "使用可灵AI最新模型制作一段 5 秒电影感视频：机甲战士从高空重砸地面，冲击波瞬间震开碎石与尘雾，镜头快速推近，充满力量感",
+    "使用可灵AI最新模型制作一条 15 秒运动鞋营销短片：街头开场抓住注意力，三秒切出产品特写与穿着动态，结尾落在鞋身细节特写",
+    "使用可灵AI最新模型绘制一幅古风武侠人物，身着白衣，手持长剑，立于山巅之上，云雾缭绕，夕阳余晖映照，画面唯美，细节精致",
+    "使用可灵AI查看动作库，预览已保存的动作；选定后，用最新模型将该动作应用到我提供的主体图片生成视频",
+    "使用可灵AI将我提供的角色正面图和侧面图保存为第一个可复用主体，命名为“小白”，方便后续用最新模型创作时保持角色一致"
   ],
   "examples_en": [
-    "Use Kling AI to create a cyberpunk-style cat sitting on a neon-lit rooftop.",
-    "Use Kling AI to paint a red panda in a vintage spacesuit, floating in front of a space station window with the Earth's blue glow illuminating its face, rich in detail, with a cinematic quality.",
-    "Use Kling AI to generate a 5‑second cinematic video: a mech warrior slams down from height onto the ground, sending out a shockwave that instantly blasts apart rubble and dust, with the camera rapidly pushing in for a powerful impact.",
-    "Use Kling AI to produce a 15‑second sport shoe marketing clip: open with an urban street scene to grab attention, cut to a product close‑up and dynamic wearing shots within three seconds, and end with a detailed close‑up of the shoe's upper.",
-    "Use Kling AI to paint a traditional Chinese martial arts figure in white robes, holding a long sword, standing on a mountain peak surrounded by mist and clouds, with the golden glow of sunset, beautifully composed and finely detailed.",
-    "Use Kling AI to browse the motion library and preview saved motions; after I select one, apply it to my subject image to generate a video.",
-    "Use Kling AI to save the front and side views of my character as my first reusable Element, named “Xiaobai”, to help keep the character consistent in future creations."
+    "Use Kling AI's latest model to create a cyberpunk-style cat sitting on a neon-lit rooftop.",
+    "Use Kling AI's latest model to paint a red panda in a vintage spacesuit, floating in front of a space station window with the Earth's blue glow illuminating its face, rich in detail, with a cinematic quality.",
+    "Use Kling AI's latest model to generate a 5‑second cinematic video: a mech warrior slams down from height onto the ground, sending out a shockwave that instantly blasts apart rubble and dust, with the camera rapidly pushing in for a powerful impact.",
+    "Use Kling AI's latest model to produce a 15‑second sport shoe marketing clip: open with an urban street scene to grab attention, cut to a product close‑up and dynamic wearing shots within three seconds, and end with a detailed close‑up of the shoe's upper.",
+    "Use Kling AI's latest model to paint a traditional Chinese martial arts figure in white robes, holding a long sword, standing on a mountain peak surrounded by mist and clouds, with the golden glow of sunset, beautifully composed and finely detailed.",
+    "Use Kling AI to browse the motion library and preview saved motions; after I select one, apply it to my subject image with the latest model to generate a video.",
+    "Use Kling AI to save the front and side views of my character as my first reusable Element, named “Xiaobai”, to help keep the character consistent when I create with the latest model later."
   ]
 }

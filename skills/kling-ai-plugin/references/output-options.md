@@ -1,0 +1,11 @@
+# Output specification selection
+
+Read when ratio, duration, resolution, or count has multiple allowed values, or input conditions invalidate defaults. Skip only when all these fields have a single legal value. This file contains no static tier table.
+
+- Use the selected model's actual field names and enums for resolution, ratio, duration, and count. Omit absent parameters. Higher tiers mentioned in descriptions do not expand enums or guarantee access after a membership upgrade.
+- Preserve defaults compatible with intent. For an explicit maximum-resolution request, choose the highest available tier compatible with budget and other constraints. "Good quality" alone does not authorize higher tiers/counts, and resolution does not guarantee creative quality.
+- Derive ratio from destination: `9:16` for vertical shorts/stories, `1:1` for square feeds, `16:9` for horizontal ads/web/long video; use ultrawide only when requested. These choices still require live support. Use the model default only when no destination clues exist. Image-to-video must also consider first-frame composition.
+- When a ratio field is declared, pass it explicitly even if optional: omission can turn a vertical request into the default landscape output. Omit the field if undeclared; do not invent another name. Check reference prerequisites before using an automatic ratio. Otherwise use a legal explicit ratio matching intent. Protect subjects/text when source and target ratios differ, without stretching or implicit destructive cropping.
+- Duration must accommodate action, dialogue, pauses, and ending. Use the shortest legal duration for a simple action/shot, a longer tier for dialogue, singing, a complete product action, or two connected beats, and longer narratives only when supported and needed. Do not force every request to the shortest tier, cut dialogue, accelerate speech, or split into paid tasks to fit.
+- Do not add unrequested results. If count exceeds the per-call cap, explain the feasible range; do not split into extra paid calls without corresponding authorization.
+- Keep prompt specifications consistent with parameters. Unsupported specifications in prose do not substitute for parameters.

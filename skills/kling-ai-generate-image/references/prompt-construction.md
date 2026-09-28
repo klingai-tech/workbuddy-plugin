@@ -2,6 +2,8 @@
 
 ## Minimally sufficient prompt
 
+Preserve a prompt verbatim when the user explicitly requests it. Otherwise select only details that affect the result, with facts, exact text, and protected elements before atmosphere.
+
 Separate the brief into three groups:
 
 1. **Hard constraints:** preserve every explicit subject, identity, product structure, copy string, count, destination, and forbidden change.
@@ -40,8 +42,8 @@ Choose one primary profile from the intended use; add a secondary profile only w
 
 ### Reference edit and brand variant
 
-- **Prompt focus:** treat the source as the factual baseline and define one change budget. List the identity, product structure, viewpoint, perspective, logo, copy, and background facts that stay locked.
-- **Acceptance gate:** unauthorized regions do not drift; new light, season, color, or environment respects original perspective, occlusion, and material response; variants change only the approved dimension.
+- **Prompt focus:** treat the source as the factual baseline and define every allowed change. List the identity, product structure, viewpoint, perspective, logo, copy, and background facts that stay locked.
+- **Acceptance gate:** unauthorized regions do not drift; new light, season, color, or environment respects original perspective, occlusion, and material response; variants change only approved dimensions.
 - **Avoid:** redescribing the whole source and accidentally rewriting facts, or treating a style reference as identity, product, or composition evidence.
 
 Read [image scene patterns](scene-patterns.md) only when finer destination choices are needed.
@@ -61,29 +63,19 @@ Use only the categories that matter, in this order:
 
 If hard constraints conflict, do not silently select one. Ask the smallest question needed to resolve the conflict. User facts override templates, stylistic convention, and model defaults.
 
-## Reference manifest
+## Local edits
 
-When multiple inputs are used, state their roles before the creative prompt:
-
-```text
-REFERENCE 1 = primary subject identity
-REFERENCE 2 = product geometry and label
-REFERENCE 3 = official logo; preserve exact shape and colors
-```
-
-Do not use a style reference as an identity reference. Describe the transferable characteristics instead.
-
-For image-to-image, emphasize what may change and what must remain fixed rather than reimagining or exhaustively redescribing the source. With multiple references, refer only to distinct declared roles instead of blending every image into a vague style.
+The loaded reference-input module handles inspection, roles, and limits. Write allowed changes first, then protected facts. For example: change the background to a pale-gray studio while preserving bottle geometry, cap, label text, and color; use soft rear-side light for the glass and front fill for label readability. Do not turn local edits into product redesign or unrequested beautification.
 
 ## Exact text
 
 - Preserve user copy character-for-character.
-- Prefer generating a text-free base with deliberate copy-safe space when typography can be added by a deterministic design tool later.
-- If the user explicitly wants baked text, state the exact text once, request no other readable text, and warn that generated typography may need review.
+- Use a copy-safe base for later typography only when the user accepts that workflow and an appropriate design tool exists. Do not replace a requested finished image with a text-free base.
+- For generated text, specify exact wording, position, hierarchy, and language once. Do not add unrelated copy or remove existing labels. Preserve multiple requested passages without shortening or rewriting them. Inspect readability before judging; correct prompt text does not prove correct output text.
 
 ## Controlled variants
 
-Generate separate prompts rather than requesting a batch of near-duplicates. Keep locked facts identical and vary one axis:
+Use separate prompts for different requested concepts; for multiple outputs of the same prompt, honor authorized count and live batch caps without splitting into extra paid calls. Vary one dimension by default for controlled comparisons, or all explicitly requested dimensions, keeping other facts fixed:
 
 - concept: literal / human / metaphorical
 - camera: macro / medium / environmental wide

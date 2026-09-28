@@ -23,7 +23,7 @@ Select the smallest pattern that matches the user's destination. User-supplied f
 ## People and identity
 
 - **Portrait/editorial:** specify framing, expression, gaze, wardrobe, background, key/fill/rim lighting, and texture. Keep skin and facial structure natural unless stylization is requested.
-- **Reference identity:** identify each reference by role and order. Lock bone structure, skin tone, hairline, distinctive features, and age presentation without beautifying or averaging.
+- **Reference identity:** identify each reference by role and order. Preserve requested identity traits and avoid unintended changes to facial structure, skin tone, hairline, or age. Apply explicit retouching, makeup, and style requests within their allowed scope.
 - **Fashion/try-on:** preserve garment cut, material, pattern, fastening, logo placement, and fit; use plausible anatomy and fabric tension.
 
 ## Covers and thumbnails
@@ -31,11 +31,11 @@ Select the smallest pattern that matches the user's destination. User-supplied f
 - **YouTube 16:9:** one dominant face/object, strong information gap, bright subject separation, minimal clutter, readable at small size, truthful to the video.
 - **Shorts/story 9:16:** keep faces and key action in the upper two-thirds; reserve lower safe area for platform UI.
 - **Poster:** one visual thesis, deliberate hierarchy, clean copy area, recognizable silhouette, controlled palette.
-- Do not copy a reference thumbnail's exact identity or composition. Extract only generic energy, framing, palette, and layout logic.
+- For style-only references, extract energy, framing, palette, and layout logic. Honor explicitly requested identity or composition preservation according to the assigned role.
 
 ## Concept selection
 
-Only when the user explicitly requests brainstorming, multiple options, or creative directions, propose three materially different routes. If the user already requested generation and did not ask to review concepts first, choose the best-fit route internally and continue; do not replace an authorized generation with a proposal:
+When the user asks for brainstorming or options, offer materially different routes. For direct generation, choose an appropriate route internally and continue; do not replace an authorized generation with a proposal. Examples:
 
 1. Product truth — literal demonstration or faithful hero shot.
 2. Human outcome — lifestyle moment showing use and emotion.

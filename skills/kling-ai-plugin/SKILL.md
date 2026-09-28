@@ -1,69 +1,49 @@
 ---
-name: kling-ai
-description: Generate professional, cinematic images and videos through Kling AI in WorkBuddy. Routes natural-language requests into precise T2I, I2I, T2V, or I2V prompts for posters, ads, product visuals, and short films. Also handles subject-library (Element) creation, browsing, updates, deletion and reuse, motion-library queries, motion control, asset upload, credits, and task status.
+name: kling-ai-plugin
+description: Generate images or videos with Kling AI in WorkBuddy, or handle existing tasks, asset uploads, subject and motion libraries, credits, and account connections. Capabilities depend on the current account's live MCP response. Do not use for media analysis that does not call Kling.
 ---
 
 # Kling AI
 
-Use the configured Kling MCP server at `https://kling.ai/mcp/plugin`.
+Use the `kling-ai-plugin` connector in this package's `mcp.json`. WorkBuddy manages OAuth; do not request API keys, override client registration, or log credentials, private account fields, or signed URLs.
 
-## Route specialized generation
+## Load rules by request
 
-- Route text-to-image, image-to-image, posters, covers, product stills, and image concept requests to `kling-ai-generate-image`.
-- Route text-to-video, image-to-video, motion control, animation, camera motion, storyboards, and video concept requests to `kling-ai-generate-video`.
-- Keep OAuth, logout or account switching, attachment intake, the motion library, Element management, credit checks, and task status in this Skill. Orchestrate cross-media requests here: apply the image Skill to the image stage and the video Skill to the video stage, with paid stages strictly serialized.
-- Pure status checks, refreshed links, and downloads for an existing result use the result workflow without creating a generation. Editing an existing result, making a variant, or turning it into a video is a new paid generation: refresh and select the work by task number, then submit once through the relevant specialized Skill.
+- Image generation, editing, posters, and reference-based creation: use `kling-ai-generate-image`.
+- Video generation, keyframes, omni references, motion control, and shot planning: first read the [video Skill](../kling-ai-generate-video/SKILL.md) and follow its entry-point routing before choosing a model. Reading only this core Skill and the submission workflow is insufficient.
+- Progress, existing results, or refreshed output links: read only [task results](references/task-results.md), without generation recommendations, model parameters, or creative references.
+- New generation, edits, or authorized retries: select through the relevant creative Skill, then follow [generation submission](references/tool-workflows.md). Execute dependent steps in order.
+- Subject library, motion library, or local upload: read [asset workflows](references/asset-workflows.md). Read-only asset queries never submit generation.
+- Before generation, read [capability discovery](references/capability-discovery.md). After selecting an available model, use the [parameter module table](references/model-parameters.md) to load only supported rules needed for this request.
+- Authorization, upload, model, or service errors: read [troubleshooting](references/troubleshooting.md). Read [examples](references/prompt-examples.md) when examples are needed.
 
-Do not ask mechanically about an attachment's role. When wording such as “make a video from this image” or “edit this image” has one reasonable interpretation, use it as the first frame or editable source. Ask only when first frame, identity/product reference, editable source, last frame, and style reference remain materially different plausible roles.
+## Account visibility and rollout
 
-For any generation with images, select the tool and model first, then map media to the exact input names declared for that model in the current schema. `image_1`, `first_image`, and `image` are not interchangeable.
+- The current account's live `who_am_i` response governs models, parameters, specifications, input types, and combination limits. `tools/list` establishes tool availability and call structure; membership pages, tool descriptions, and static examples cannot override account capabilities.
+- Display, recommend, or call a model name only when the current `tools/list` exposes its tool and `who_am_i.availableModels` lists it under that tool. Tool counts, newly exposed omni tools, example names, and default-model fields are not substitutes for membership in that model set.
+- Compare "latest" only within available models supporting the required output type and intent. Do not mix image and video versions; `defaultModel` does not mean latest. Qualify the conclusion as the latest image/video model available to the current account. If no suitable new model is returned, use an available model without mentioning higher versions, unreleased names, allowlists, or better hidden models. Never fill gaps from Skills, snapshots, other accounts, or earlier sessions.
+- If a requested model is absent from filtered discovery, expand discovery as described in [capability discovery](references/capability-discovery.md). If it exists only for another output type, explain the mismatch and let the user choose whether to keep the requested medium or use the model's supported medium; do not switch silently. After complete discovery, report only that the current connection did not return the requested model, without repeating hidden names. Alternatives must be actually available and suitable.
+- Rediscover tools and models after reconnecting or changing account/environment. If discovery fails or model membership cannot be established, do not submit using a static fallback.
 
-## Safety and submission contract
+## Creative and capability selection
 
-- Use OAuth through the host MCP connection flow. Never ask for an API key or expose credentials, cookies, authorization headers, private account fields, or signed URLs in logs.
-- A request for one generation authorizes one paid submission after materially missing inputs are resolved. For a cross-media request or explicitly requested distinct outputs, treat each requested paid stage as separately authorized; ask before adding any unrequested paid stage. Do not add a credit-cost warning or separate confirmation.
-- Submit at most once per explicitly authorized paid stage. Do not automatically retry failed or ambiguous submissions.
-- Discover the live remote tools and schemas at runtime; the provider schema overrides examples in this Skill.
-- If submission returns a non-terminal state, poll with the status tool declared by the live schema at provider-allowed intervals until the task succeeds or fails. Stop only if the user cancels or the current turn times out; then return the current state and task number.
+Read the video Skill even for read-only video model selection. When `omni_ref_video` exists, inspect its `who_am_i` model set before choosing or falling back. Text-only input does not imply `text_to_video` is the only option: required assets depend on the selected model's input and combination rules, not the tool's name.
 
-Load references by request type. For a single image or video generation, route to the specialized Skill without rereading shared files here. For cross-media work, first read [the paid-task workflow](references/tool-workflows.md); at each paid stage, the specialized Skill reads [the MCP contract](references/mcp-contract.md), [the Global model snapshot](references/model-parameters.md), and [failure-prevention gates](references/failure-prevention.md). Account, credit, and status queries use live tool descriptions only. For subject-library operations, motion-library queries, and local upload, read [asset workflows](references/asset-workflows.md) and the MCP contract. Read [troubleshooting](references/troubleshooting.md) only after an authorization, schema, media-intake, or provider error.
+Honor supplied asset roles, model, sound, ratio, and quality requirements. Ask only about missing information that materially changes the result. Prefer a user-specified available model; otherwise use these branches without maintaining fixed model lists:
 
-## OAuth client identity
+| Live capability | Selection |
+| --- | --- |
+| The current entry point, or a new one supporting the same intent, returns a suitable newer-generation model | Prefer the newer model. Use live descriptions for quality or speed preferences and actual billing information for budget comparisons. |
+| No suitable new model is returned, including a new tool exposing only existing models | Keep the existing entry point and its available `defaultModel`; if that default does not meet requirements, select a suitable model within its available set. Do not mention unopened models. |
 
-Before OAuth dynamic client registration, include `client_name: "Plugin-WorkBuddy"`. This is OAuth metadata, not a tool argument, URL parameter, or secret. If the host cannot inject it, stop before authorization and report the limitation.
+Determine newer generations from current descriptions and comparable versions within the same family, not tool count, a new tool, or speed-related names alone. If uncertain, use the existing branch without guessing. Include a new entry point only when it supports the user's asset roles and intent; never move models between tools.
 
-## Workflow
+Both branches require live parameters and account visibility. Stop selection when capability reading fails. Required identity/product consistency, text, motion, and sound come before version preferences. Defaults cannot override assets, duration, speed, or budget; do not silently raise resolution/count or reduce requirements. "Best quality" is not synonymous with maximum resolution or fastest generation, and does not justify claims about uninspected results.
 
-1. Identify generation, motion control, subject-library management, motion-library browsing, local upload, account mutation, or a read-only query. Complete standalone asset operations through the asset workflow and return directly; model selection, credits, submission, and polling below apply only to generation. For cross-media work, split only the paid stages the user requested and apply the corresponding specialized workflow to each.
-2. Read the current `tools/list`; before generation or motion control, call `who_am_i`. A higher `mcpVersion` alone is not a reason to block or restart repeatedly. Continue when the current tools and live model schema fully describe the call; request a host restart and a fresh session only if the target tool is absent, the top-level schema conflicts with the model schema, or the host explicitly reports stale tools. Immediately before each paid submission, call `query_membership_and_credits` and stop when it clearly reports no or insufficient credits.
-3. For images, prefer a host-provided reference accepted by the selected model. If a local file has no usable reference, check conditional two-step upload in the asset workflow. For any older Kling output, ignore saved URLs and immediately before reuse call `query_tasks` once with its `generationId`; select the bound `works[]` index and `contentType`, then use that fresh URL in the same turn.
-4. Ask only for missing creative facts or settings that materially change the result.
-5. Select the tool and model before constructing the request. Treat the selected model's live `arguments[]` and `inputs[]` as closed allowlists; validate the canonical model, required fields, defaults, enums, limits, and exact input names. Never send undeclared fields, and rebuild the request from empty after switching models.
-6. Call each explicitly authorized paid generation exactly once. Keep at most one non-terminal paid task for one user objective; wait for terminal state before starting another distinct task. Discovery, credits, and attachment interpretation are preparation steps, not a substitute for an authorized generation when inputs are complete.
-7. Preserve the exact `generationId` and any `taskTraceId`. When a result has multiple `works[]`, bind each displayed work to its array index and `contentType`; task number plus work index is the stable identity, not the result URL. Reuse one UUIDv7 `taskTraceId` throughout an objective and show `generationId` as the **task number**.
-8. If submission is not terminal, poll at provider-allowed intervals until the task succeeds or fails. On cancellation or current-turn timeout, return the current state and task number.
-9. Return the primary result and state that output URLs expire after 24 hours; advise timely download for long-term retention.
-10. For a direct status request, call the live status tool once and report the current state; do not start a long-running poll.
-11. Element deletion and logout/account switching mutate state. Call them only on an explicit request and follow the live confirmation and reauthorization contract.
+Status, display, and link refresh are read-only. Explicit edits, variants, or video creation are new authorized steps: refresh and select the source work, then submit through the shared workflow. A dependent step must wait for a successful predecessor and a clearly selected work.
 
-## Quality and cost defaults
+## Host and UI
 
-Professional output comes first from prompt design, scene construction, and continuity; it does not automatically require the most expensive model or resolution. Use these rules only when the user did not specify an alternative and the live schema supports the value:
+Use the remote tool's actual `_meta.ui.resourceUri` (or `_meta["ui/resourceUri"]`) and `text/html;profile=mcp-app` resource. Metadata alone does not prove the widget mounted. Follow task-result rules for refresh and fallback; do not copy widget HTML or add a second MCP server.
 
-- Model: top-level `model` has no universal default. First satisfy the mode, references, and required capabilities, then use the current `who_am_i` description to choose the closest fit. Use a model marked as the default or preferred model for that mode when the user did not specify one. Never invent an undeclared “balanced” or quality tier.
-- Images: preserve the selected model's declared resolution default. Increase it only for an explicit large-format, crop-heavy, fine-material, or `4k` requirement; reduce it only for a draft, preview, or credit-saving request. Never lower an explicit user requirement.
-- Video: preserve the selected model's declared resolution default. Increase it only for an explicit final-delivery, large-screen, post-production, or specified-resolution requirement; reduce it only for preview, speed, or cost. Never lower an explicit user requirement.
-- Video duration: use `5` seconds for one action or one shot; prefer `10` seconds for dialogue, singing, a complete product action, or two connected beats; use a longer supported duration only when the narrative needs it. Choose the shortest duration that can complete the idea instead of forcing every request into five seconds.
-- Text-to-video ratio: infer it from the destination: `9:16` for vertical shorts, `1:1` for square feeds, and `16:9` for landscape ads, web, or YouTube. Use `16:9` only when no destination context exists.
-- Image-to-video ratio: derive it from the source and destination. If the selected model declares `aspect_ratio`, pass only a live allowed value rather than silently accepting an unsuitable default; if it does not declare the field, omit it.
-
-## Failure behavior
-
-- Authorization failure: direct the user to the host MCP connection flow, then retry only after authorization succeeds.
-- Invalid model or argument: refresh the live schema and revise only the unsupported field.
-- Missing resource: for an older Kling result, verify that it was refreshed immediately before submission. If no task number exists, the work index is lost, the query fails, the work is unavailable, or a fresh URL still fails, ask the user to attach the image again; do not query repeatedly or reuse another old URL.
-- Rate limit: report the provider message and stop. Do not wait and retry, switch models, or change parameters automatically.
-- Provider task failure: explain the provider message and preserve the `generationId`; do not resubmit.
-- Insufficient credits: tell the user to recharge and stop. Do not submit another paid generation until the user explicitly states that the balance changed.
-- Lost or timed-out response: task creation is unknown. If a `generationId` exists, query only that task. Without a `generationId`, `query_tasks` cannot search; report unknown status and stop. Create a new paid task only after the user explicitly accepts the duplicate-charge risk.
-- Opaque failure, empty result, repeated validation failure, billing anomaly, or clearly unintended result: call `feedback` once as declared by the live tool, preserve all IDs, and stop. Feedback is not a retry.
+Delete subjects, log out, or switch accounts only on an explicit request with a clear target. Uploading assets, checking credits, or selecting a subject does not authorize generation.
