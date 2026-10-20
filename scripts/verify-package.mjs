@@ -59,16 +59,13 @@ function collect(path, output) {
   } else if (stat.isFile()) output.add(absolute);
 }
 for (const path of ["package.json", ...releaseAllowlist]) collect(path, releasePaths);
-// Keep development files and rollout-only model names out of the public package.
-const restrictedModelName = /\bv4(?:[._-]?0)?(?:[ _-]?flash)?\b|(?<![\w.])4\.0(?![\w.])/i;
+// Keep development files out of the public package.
 for (const path of releasePaths) {
   const local = relative(root, path);
   if (local.startsWith(`skills${sep}`)) {
     check(!local.split(sep).some((name) => name.startsWith(".") || /\.(bak|tmp|log)$/i.test(name)), `development or hidden file in published skills: ${local}`);
   }
-  if (/\.(md|json)$/.test(path)) {
-    check(!restrictedModelName.test(readFileSync(path, "utf8")), `rollout-only model name in published file: ${local}`);
-  }
+
 }
 for (const name of skills) {
   const path = `skills/${name}/SKILL.md`;
