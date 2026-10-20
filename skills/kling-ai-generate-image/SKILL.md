@@ -19,6 +19,8 @@ Read [asset workflows](../kling-ai-plugin/references/asset-workflows.md) for sub
 
 Before generation, obtain candidates through [capability discovery](../kling-ai-plugin/references/capability-discovery.md) and honor [account visibility](../kling-ai-plugin/SKILL.md#account-visibility-and-rollout). After selection, read the [parameter module table](../kling-ai-plugin/references/model-parameters.md), loading only applicable files. Submit through [generation submission](../kling-ai-plugin/references/tool-workflows.md). For existing tasks, go directly to [task results](../kling-ai-plugin/references/task-results.md).
 
+When no model is specified, recommend a suitable available image model.
+
 ## Workflow
 
 Skip generation steps for an existing-task query.

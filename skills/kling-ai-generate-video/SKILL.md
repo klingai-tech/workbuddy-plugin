@@ -19,16 +19,9 @@ Read [asset workflows](../kling-ai-plugin/references/asset-workflows.md) for sub
 
 Before generation, obtain candidates through [capability discovery](../kling-ai-plugin/references/capability-discovery.md) and honor [account visibility](../kling-ai-plugin/SKILL.md#account-visibility-and-rollout). After selection, read the [parameter module table](../kling-ai-plugin/references/model-parameters.md), loading only applicable files. Submit through [generation submission](../kling-ai-plugin/references/tool-workflows.md). For existing tasks, go directly to [task results](../kling-ai-plugin/references/task-results.md).
 
-## Load recommendations by capability
+## Default video recommendation
 
-Existing-task queries skip recommendations and creative references. For new generation, read the current connection's complete `tools/list`, following every `nextCursor`, then read exactly one file:
-
-| Tool discovery | Read |
-| --- | --- |
-| No `omni_ref_video` | [Standard video recommendations](references/standard-video.md) |
-| `omni_ref_video` exists | [Omni and new-model recommendations](references/omni-video.md), which branches further using actual model availability |
-
-Then discover models through the [video candidate tools](../kling-ai-plugin/references/capability-discovery.md#video-candidate-tools). When `omni_ref_video` exists, ordinary text/image video requests must query it together with the existing entry point before deciding whether its models meet input requirements. Recommendation files govern selection; parameter modules govern payloads. Do not preload both files or branch on tool count. Discovery failure is not absence of a new tool: explain the inability to read capabilities and stop selection. Re-evaluate after reconnecting or switching account/environment; discard the invalidated branch.
+For ordinary text-to-video, image-to-video, keyframes, and omni references, prefer a suitable Kling 4.0 model from `omni_ref_video`, which is broadly available. Read [omni recommendations](references/omni-video.md) and discover models through [video candidate tools](../kling-ai-plugin/references/capability-discovery.md#video-candidate-tools). Use canonical names and parameters from the live response; never infer availability from this recommendation. Discovery failure requires refreshing the connection or reporting the problem before selection. Motion control and other specialized requirements use entry points supporting their required capabilities.
 
 ## Workflow
 

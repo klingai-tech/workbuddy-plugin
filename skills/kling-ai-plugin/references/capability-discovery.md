@@ -11,9 +11,9 @@ Read only for generation or model selection. Task, credit, and asset queries do 
 
 ## Video candidate tools
 
-For ordinary text-to-video, query `text_to_video`; for image-to-video and keyframes, query `image_to_video`. When `omni_ref_video` exists, include it in the same `who_am_i.tools` query for both cases, for example `["text_to_video", "omni_ref_video"]`. Do not exclude it because its name mentions references or the user supplied no attachment: its model input constraints decide whether assets are required. Read the full response if tool filtering is undeclared.
+The broadly available `omni_ref_video` entry point is the default for ordinary text, image, keyframe, Element, and audio-reference video. Prefer its suitable returned Kling 4.0 models. When `who_am_i` declares tool filtering, query `["omni_ref_video"]` by default; otherwise read the complete response. Required inputs and combinations follow the selected model.
 
-When the host discovers tools by name, discover all these candidates. Searching only for `text_to_video` is not a complete tool inventory. Resolve an omitted omni entry point before selection; do not call a single entry point's default the latest. Discover motion-transfer tools by actual motion support and preserve those requirements when comparing versions.
+Expand discovery for an explicitly requested entry point/model or specialized capabilities such as motion transfer. Discover `omni_ref_video` directly when searching tools by name. If discovery fails, refresh the connection or explain the specific failure; do not automatically fall back to basic video tools.
 
 ## Reuse and boundaries
 

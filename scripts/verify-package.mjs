@@ -62,8 +62,7 @@ function collect(path, output) {
   } else if (stat.isFile()) output.add(absolute);
 }
 for (const path of ["package.json", ...releaseAllowlist]) collect(path, releasePaths);
-// Keep development files and rollout-only model names out of the public package.
-const restrictedModelName = /\bv4(?:[._-]?0)?(?:[ _-]?flash)?\b|(?<![\w.])4\.0(?![\w.])/i;
+// Keep development files out of the public package.
 for (const path of releasePaths) {
   const local = relative(root, path);
   if (local.startsWith(`skills${sep}`)) {
@@ -71,7 +70,6 @@ for (const path of releasePaths) {
   }
   if (/\.(md|json)$/.test(path)) {
     const content = readFileSync(path, "utf8");
-    check(!restrictedModelName.test(content), `rollout-only model name in published file: ${local}`);
     check(!/https?:\/\/(?:[\w-]+\.)*klingai\.com\b/i.test(content), `China endpoint or website in Global package: ${local}`);
     if (path.endsWith(".md")) {
       check(!/\p{Script=Han}/u.test(content), `Global documentation must use English: ${local}`);

@@ -95,17 +95,12 @@ for (const [label, mutate] of [
   })],
   ["mismatched release versions", (dir) => changeJson(dir, "connector-meta.json", (value) => { value.version = "0.0.0"; })],
   ["missing video Skill", (dir) => rmSync(join(dir, "skills/kling-ai-generate-video/SKILL.md"))],
-  ["missing standard video recommendations", (dir) => rmSync(join(dir, "skills/kling-ai-generate-video/references/standard-video.md"))],
   ["missing omni video recommendations", (dir) => rmSync(join(dir, "skills/kling-ai-generate-video/references/omni-video.md"))],
   ...["capability-discovery", "output-options", "reference-inputs", "audio-options", "task-results"].map((name) => [
     `missing ${name} module`, (dir) => rmSync(join(dir, `skills/kling-ai-plugin/references/${name}.md`)),
   ]),
   ["credential file under skills", (dir) => writeFileSync(join(dir, "skills/.credentials"), "dummy fixture")],
   ["backup file under skills", (dir) => writeFileSync(join(dir, "skills/SKILL.md.bak"), "dummy fixture")],
-  ["hidden model name in release documentation", (dir) => {
-    const path = join(dir, "README.md");
-    writeFileSync(path, readFileSync(path, "utf8") + "\n推荐 V4 Flash\n");
-  }],
   ["link to an existing but unpackaged document", (dir) => {
     writeFileSync(join(dir, "docs/not-shipped.md"), "# 未发布文档\n");
     writeFileSync(join(dir, "README.md"), readFileSync(join(dir, "README.md"), "utf8") + "\n[说明](docs/not-shipped.md)\n");
@@ -155,4 +150,21 @@ with zipfile.ZipFile(f"[国际]kling-workbuddy-v{package['version']}.zip") as ar
   }
   assert.ok(entries.every((name) => !/^(docs|scripts|tests|\.git)\//.test(name)));
   assert.ok(entries.every((name) => !name.split("/").some((part) => part === ".DS_Store" || part === "__MACOSX" || part.startsWith("._"))));
+});
+
+test("Kling 4.0 guidance is allowed in Global documentation", (t) => {
+  const directory = fixture(t);
+  const path = join(directory, "README.md");
+  writeFileSync(path, readFileSync(path, "utf8") + "\nUse Kling 4.0 video\n");
+  const result = run(directory, process.execPath, ["scripts/verify-package.mjs"]);
+  assert.equal(result.status, 0, result.output);
+});
+
+test("connector examples guide Kling 4.0 videos without latest-model claims", () => {
+  const connector = JSON.parse(readFileSync(join(root, "connector-meta.json"), "utf8"));
+  for (const key of ["examples_zh", "examples_en"]) {
+    assert.doesNotMatch(connector[key].join("\n"), /最新|latest/i);
+    assert.match(connector[key].join("\n"), /4\.0/);
+    assert.doesNotMatch(connector[key].join("\n"), /V4/i);
+  }
 });

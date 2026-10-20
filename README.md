@@ -29,9 +29,10 @@ into a conversation.
 ## Use
 
 Describe the image or video you want in natural language. When no model is
-specified, Kling AI prefers the newest suitable model available to the current
-account; otherwise it keeps the existing entry point and an available default
-model. Each authorized generation step is submitted once. A working result
+specified, video defaults to the broadly available `omni_ref_video` entry point
+and its suitable Kling 4.0 models; use an available default if none is suitable.
+Images use a suitable available image model. Omni references can combine Elements,
+images, video, and audio according to the selected model's live capabilities. Each authorized generation step is submitted once. A working result
 widget refreshes progress; otherwise Kling AI checks at service-allowed
 intervals until success or failure. If the current turn ends first, it returns
 a **task number** that can be used to query the same task later.

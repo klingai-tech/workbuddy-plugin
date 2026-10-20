@@ -11,6 +11,4 @@ Read only when the complete current `tools/list` has no `omni_ref_video`. Shared
 | Motion transfer | `motion_control`; require a subject image and exactly one saved `motionId` or source video |
 | Explicit omni, video, or audio references | Explain unmet requirements if current tools cannot support them fully; do not drop assets or silently downgrade |
 
-Keep the available `defaultModel` for the relevant entry point. If it cannot meet speed, budget, sound, or asset requirements, select a suitable available model within that entry point. Absence of an omni tool does not imply other tools are unchanged: if an entry point returns a suitable newer model, follow core selection rules and read its live parameters.
-
-Use shared parameter modules after selection; do not load or construct undeclared features. Compare speed and budget using live descriptions and billing, not names. Never mention unreturned models or suggest upgrading to a hidden model.
+Use live parameters and available defaults for an explicitly selected basic entry point. Ordinary video requests follow [omni recommendations](omni-video.md). Never infer unavailable models or features.

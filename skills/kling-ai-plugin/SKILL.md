@@ -10,7 +10,7 @@ Use the `kling-ai-plugin` connector in this package's `mcp.json`. WorkBuddy mana
 ## Load rules by request
 
 - Image generation, editing, posters, and reference-based creation: use `kling-ai-generate-image`.
-- Video generation, keyframes, omni references, motion control, and shot planning: first read the [video Skill](../kling-ai-generate-video/SKILL.md) and follow its entry-point routing before choosing a model. Reading only this core Skill and the submission workflow is insufficient.
+- Video generation, keyframes, omni references, motion control, and shot planning: first read the [video Skill](../kling-ai-generate-video/SKILL.md) and prefer a suitable Kling 4.0 model from `omni_ref_video`. Reading only this core Skill and the submission workflow is insufficient.
 - Progress, existing results, or refreshed output links: read only [task results](references/task-results.md), without generation recommendations, model parameters, or creative references.
 - New generation, edits, or authorized retries: select through the relevant creative Skill, then follow [generation submission](references/tool-workflows.md). Execute dependent steps in order.
 - Subject library, motion library, or local upload: read [asset workflows](references/asset-workflows.md). Read-only asset queries never submit generation.
@@ -21,24 +21,17 @@ Use the `kling-ai-plugin` connector in this package's `mcp.json`. WorkBuddy mana
 
 - The current account's live `who_am_i` response governs models, parameters, specifications, input types, and combination limits. `tools/list` establishes tool availability and call structure; membership pages, tool descriptions, and static examples cannot override account capabilities.
 - Display, recommend, or call a model name only when the current `tools/list` exposes its tool and `who_am_i.availableModels` lists it under that tool. Tool counts, newly exposed omni tools, example names, and default-model fields are not substitutes for membership in that model set.
-- Compare "latest" only within available models supporting the required output type and intent. Do not mix image and video versions; `defaultModel` does not mean latest. Qualify the conclusion as the latest image/video model available to the current account. If no suitable new model is returned, use an available model without mentioning higher versions, unreleased names, allowlists, or better hidden models. Never fill gaps from Skills, snapshots, other accounts, or earlier sessions.
+- Video defaults to suitable available Kling 4.0 models from `omni_ref_video`; images default to suitable available image models. Actual selection remains governed by the current account response for the required output type.
 - If a requested model is absent from filtered discovery, expand discovery as described in [capability discovery](references/capability-discovery.md). If it exists only for another output type, explain the mismatch and let the user choose whether to keep the requested medium or use the model's supported medium; do not switch silently. After complete discovery, report only that the current connection did not return the requested model, without repeating hidden names. Alternatives must be actually available and suitable.
 - Rediscover tools and models after reconnecting or changing account/environment. If discovery fails or model membership cannot be established, do not submit using a static fallback.
 
 ## Creative and capability selection
 
-Read the video Skill even for read-only video model selection. When `omni_ref_video` exists, inspect its `who_am_i` model set before choosing or falling back. Text-only input does not imply `text_to_video` is the only option: required assets depend on the selected model's input and combination rules, not the tool's name.
+Read the video Skill even for read-only video selection. Ordinary video requests default to the broadly available `omni_ref_video` entry point and its suitable returned Kling 4.0 models. Construct text, image, keyframe, Element, and audio inputs from live constraints. Specialized requirements such as motion transfer use an entry point supporting that intent.
 
-Honor supplied asset roles, model, sound, ratio, and quality requirements. Ask only about missing information that materially changes the result. Prefer a user-specified available model; otherwise use these branches without maintaining fixed model lists:
+Honor supplied asset roles, model, sound, ratio, and quality requirements. Ask only about missing information that materially changes the result. Prefer a user-specified available model. Images use an available image default, or another suitable image model. Video prefers suitable returned Kling 4.0 models; if none is suitable, use an available default meeting requirements without mentioning hidden models. Speed, budget, motion, and asset requirements take precedence over version preferences.
 
-| Live capability | Selection |
-| --- | --- |
-| The current entry point, or a new one supporting the same intent, returns a suitable newer-generation model | Prefer the newer model. Use live descriptions for quality or speed preferences and actual billing information for budget comparisons. |
-| No suitable new model is returned, including a new tool exposing only existing models | Keep the existing entry point and its available `defaultModel`; if that default does not meet requirements, select a suitable model within its available set. Do not mention unopened models. |
-
-Determine newer generations from current descriptions and comparable versions within the same family, not tool count, a new tool, or speed-related names alone. If uncertain, use the existing branch without guessing. Include a new entry point only when it supports the user's asset roles and intent; never move models between tools.
-
-Both branches require live parameters and account visibility. Stop selection when capability reading fails. Required identity/product consistency, text, motion, and sound come before version preferences. Defaults cannot override assets, duration, speed, or budget; do not silently raise resolution/count or reduce requirements. "Best quality" is not synonymous with maximum resolution or fastest generation, and does not justify claims about uninspected results.
+Never move models between tools. All selection requires account visibility and live parameters; stop if capability reading fails. Do not silently raise resolution/count or reduce requirements, and do not promise uninspected result quality.
 
 Status, display, and link refresh are read-only. Explicit edits, variants, or video creation are new authorized steps: refresh and select the source work, then submit through the shared workflow. A dependent step must wait for a successful predecessor and a clearly selected work.
 
