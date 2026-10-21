@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "kling-ai-plugin": {
-      "type": "http",
+      "type": "streamable-http",
       "url": "https://kling.ai/mcp/plugin",
       "timeout": 30000
     }
