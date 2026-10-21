@@ -77,6 +77,9 @@ test("Kling 4.0 video guidance is allowed in release documentation", (t) => {
 });
 
 for (const [label, mutate] of [
+  ["unsupported http transport", (dir) => changeJson(dir, "mcp.json", (value) => {
+    value.mcpServers["kling-ai-plugin"].type = "http";
+  })],
   ["renamed MCP server", (dir) => changeJson(dir, "mcp.json", (value) => {
     value.mcpServers["wrong-name"] = value.mcpServers["kling-ai-plugin"];
     delete value.mcpServers["kling-ai-plugin"];

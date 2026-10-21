@@ -37,7 +37,7 @@ check(packageJson.license === "MIT" && packageJson.author === "KLING AI Pte Ltd"
 check(Object.keys(mcp.mcpServers ?? {}).join() === "kling-ai-plugin", "only kling-ai-plugin may be registered");
 const server = mcp.mcpServers?.["kling-ai-plugin"];
 check(server?.url === "https://klingai.com/mcp/plugin", "unexpected release MCP URL");
-check(server?.type === "http", "Kling MCP transport must be http");
+check(server?.type === "streamable-http", "Kling MCP transport must be streamable-http");
 check(server?.timeout === 30000, "Kling MCP timeout must remain 30000");
 check(Array.isArray(packageJson.files) && JSON.stringify([...packageJson.files].sort()) === JSON.stringify([...releaseAllowlist].sort()), "package files must match the connector-only release allowlist");
 
