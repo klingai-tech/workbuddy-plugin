@@ -15,7 +15,7 @@ Reuse a UUIDv7 `taskTraceId` for the same goal; unrelated goals get new values. 
 
 ## Prepare and submit once
 
-1. Follow [capability discovery](capability-discovery.md) for complete tools and relevant models, defaults, parameters, and inputs, avoiding unrelated/repeated queries. Apply the [selection branches](../SKILL.md#creative-and-capability-selection). Do not display, recommend, or call unreturned models, change endpoints, or submit capability probes.
+1. Follow [capability discovery](capability-discovery.md) for relevant tools and models. Reuse the response obtained during preparation. Apply [creative and capability selection](../SKILL.md#creative-and-capability-selection) to find a compatible pair. Display, recommend, and call only models returned for the current account.
 2. The request authorizes one call per explicit step. Resolve only material missing information without repeating confirmation. Disclose omni billing only when required by the live tool, using actual returned information.
 3. Prefer host references accepted by the model; use [two-step upload](asset-workflows.md) when needed. Before new generation with a historical Kling work, query its original task once and select the current URL by original index/type. Stop if identity is missing, refresh fails, or the resource remains unusable; do not retry old URLs.
 4. Validate required fields, types, enums, counts, and exclusions against the [MCP contract](mcp-contract.md) and model. Rebuild requests after switching models, without old parameters.
@@ -25,8 +25,8 @@ Reuse a UUIDv7 `taskTraceId` for the same goal; unrelated goals get new values. 
 
 ## Ambiguity, failure, and stopping
 
-If an ambiguous response includes `generationId`, query it. Without one, use task-list or trace lookup only if explicitly exposed by live tools. Otherwise report unknown and stop, without inferring non-creation or replaying.
+If an ambiguous response includes `generationId`, query that task. If no task number was obtained, report the known outcome or error, mark any unresolved creation or billing state unknown, and stop. `query_tasks` requires the task number and cannot search history, check credits, or recover tasks by `taskTraceId`. An unchanged balance or missing history entry cannot establish creation or billing state.
 
-Credit, membership, queue, rate-limit, asset, or service errors do not authorize automatic retry, model switching, or intent changes. For an explicit retry, resolve whether the earlier task was created, then submit once using the same goal's trace ID. If ambiguity cannot be resolved, explain potential duplicate charging and treat replacement as a new paid step only after the user explicitly accepts that risk.
+Credit, membership, queue, rate-limit, asset, or service errors do not trigger automatic retries, model switching, or intent changes. Another submission requires fresh authorization, including after a rejected call or a report that no task is visible. For an explicit retry, check the original submission state. If it remains unknown, submit a replacement only after the user explicitly accepts the risk of duplicate charges.
 
 Continue subsequent authorized steps when their dependencies are satisfied. Use [task results](task-results.md) for refresh, fallback, and inspection, and [troubleshooting](troubleshooting.md) for error details.

@@ -7,10 +7,12 @@ Complete [capability discovery](capability-discovery.md) first. Parameters, inpu
 1. The tool must exist and the canonical `model` must belong to its `models`; this also applies to `defaultModel`. Fix the tool/model pair before constructing the request. Rebuild when changing models.
 2. Treat that model's `arguments` and `inputs` as closed field allowlists. Omit absent fields and do not load their modules. Satisfy every required field; omit `inputs` only when there are no inputs.
 3. Use exact enum values. If only one value is legal and compatible with intent and dependencies, use it without reading tier-selection advice. Omit irrelevant optional fields without required dependencies. Follow descriptions for free text; do not invent enums.
-4. Prefer legal user-specified values or values reliably implied by the destination; otherwise retain live defaults. Defaults must still satisfy input conditions and mutual exclusions. Stop on conflicts rather than dropping requirements.
+4. Bind every supported explicit setting to its own argument, including optional settings. Duration in the prompt cannot override the duration default. A first frame does not cancel a supported requested ratio. If a fixed model setting already meets a requirement, omit an invented field. Choose other values based on intended use and compatible live defaults.
 5. Send each parameter name once. Encode numbers, booleans, and JSON arrays as required by the tool. Read the [request structure](mcp-contract.md) when constructing the outer payload.
 
-Default preservation does not apply to switches that add output content. Result count, multi-shot structure, and generated sound cannot exceed user authorization. Live defaults for fields such as `imageCount`, `prefer_multi_shots`, `enable_audio`, or `enable_asmr` may enable extras: when unrequested, explicitly choose one result, one continuous shot, and silence within the model's allowed values. Omit undeclared controls rather than inventing prompt substitutes. Honor explicit requests for multiple works, shots, or sound; explain unsupported requirements without generating extras.
+Result count, smart shot splitting, and generated sound may have defaults that add content. When unrequested, choose one result and disable the relevant switches where legal. Omit undeclared controls. Stop and explain when an explicit requirement for count, shot structure, or sound cannot be met.
+
+When smart shot splitting only allows `true`, follow the live schema and default. For an ordinary single-shot request, express one continuous shot in the prompt and explain the setting's limit. If the user requires a single-shot guarantee, submit only when live capabilities explicitly support it.
 
 Minimal loading never permits skipping required fields or cross-field dependencies.
 

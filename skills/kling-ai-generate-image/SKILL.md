@@ -1,11 +1,13 @@
 ---
 name: kling-ai-generate-image
-description: Use Kling AI in WorkBuddy for text-to-image, image-to-image, editing, repainting, and controlled variants, including posters, products, ads, portraits, and social visuals. For existing tasks, use the core Skill's shared query workflow.
+description: Write or refine Kling AI image prompts in WorkBuddy, or generate, edit, repaint, and create controlled variants for posters, products, ads, portraits, and social visuals. For existing tasks, use the core Skill's shared query workflow.
 ---
 
 # Kling AI image generation
 
-Turn a creative request into one well-specified Kling image request. Use live tools and models from `kling-ai-plugin` in this package's `mcp.json`; do not define another endpoint here.
+For a prompt-only request, follow [prompt construction](references/prompt-construction.md) and preserve the requested composition and edit scope, such as copy space on the left. Finish with the requested prompt. Account queries, uploads, model or output recommendations, and invitations to generate are outside this step.
+
+For generation preparation or submission, use live tools and models from `kling-ai-plugin` in this package's `mcp.json`. If the user asks for final settings only, verify the model, prompt, specifications, and reference roles. Present the settings and wait for approval.
 
 ## Operating rules
 
@@ -29,7 +31,7 @@ Skip generation steps for an existing-task query.
 2. Load only applicable parameter modules. Skip output-selection advice only when all relevant specification fields have a single legal value. Resolve unsupported requirements before reading detailed instructions for an unavailable feature.
 3. Read [prompt construction](references/prompt-construction.md) for every new generation, edit, or variant. Select a quality profile to decide visible facts and acceptance checks. Only read-only queries and authorized retries with unchanged parameters may skip it. Add [scene patterns](references/scene-patterns.md) when further scene decisions are needed. An existing complete plan is not a reason to skip prompt construction.
 4. Internally establish intended use, locked facts, and creative scope. Ask only about missing critical identity/copy or conflicting requirements; choose ordinary lighting, backgrounds, and unspecified optional settings reasonably.
-5. Align the prompt with the selected model and actual asset bindings, submit once through the shared workflow, then follow task results. Do not redefine polling or retry behavior here.
+5. Align the prompt with the selected model and actual asset bindings. When generation is authorized, submit once through the shared workflow and follow task results.
 
 ## Generation modes
 

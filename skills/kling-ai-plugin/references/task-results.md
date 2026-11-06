@@ -2,7 +2,7 @@
 
 Read only this file for existing-task queries, post-submission refresh, and output inspection. Do not load model recommendations, parameter modules, or generation submission. Use a real `generationId`; locate an ambiguous task rather than guessing IDs or regenerating.
 
-Call `query_tasks` with the real task number. Preserve each work's original index and `contentType`; temporary URLs are not permanent identities. Query the original task for link refresh, asset reuse, or an explicit request. Without a task number or live task-list/trace-lookup capability, report unknown. `taskTraceId` alone neither enables lookup nor proves non-creation.
+Call `query_tasks` with the real task number. Preserve each work's original index and `contentType`; temporary URLs are not permanent identities. Query the original task for link refresh, asset reuse, or an explicit request. Without a task number, report unknown. If a query response omits the number, keep using the ID already known for that task.
 
 ## Refresh and fallback
 
@@ -17,13 +17,14 @@ Use actual host feedback to establish whether the widget mounted and can refresh
 | An authorized next step needs a predecessor but the host does not return widget updates | Query the original task for the dependency under these rules; reuse the component without duplicate generation/display |
 | A subsequent generation needs a current source URL | Query the source task once for asset preparation, without recreating the result card |
 
-When polling is necessary, use provider-allowed intervals until success or failure. Stop on user cancellation, turn timeout, host limits, rate limiting, or query errors; return status and task number without resubmission. If no task number exists, use the ambiguity rules above.
+When polling is necessary, use provider-allowed intervals until success or failure. Stop on user cancellation, turn timeout, host limits, rate limiting, or query errors; return status and task number without resubmission. If no task number exists, report unknown.
 
 Avoid duplicate media/download links when the widget works. Honor explicit requests for links or specific works. Without a widget, deliver usable returned media or a primary result link; show requested multiple works rather than forcing batches to one result.
 
 ## Completion criteria
 
 - Normalize status according to live schema/response semantics. Nonterminal means submitted/processing. Report failure and retain the ID, but summarize errors rather than exposing credentials or model names outside the current available set.
+- Summarize the settings actually submitted. When no audio settings were sent and the output was not inspected, leave audio status unspecified. Report a charge only when the service returns the actual amount, such as `creditsConsumed`. Submission count and balance checks do not establish the charge.
 - Claim completion only when the task succeeds and at least one usable work matches the requested media type. If work-level status exists, require success; otherwise use terminal task status and media. A URL on an explicitly unsuccessful work is not a finished result.
 - Prefer usable `urlWithoutWatermark`, then `url`. `coverUrl` is a cover, not a video. Preserve mappings across multiple outputs and report partial success accurately.
 - Terminal success without usable works is a result inconsistency: explain without generating replacements. Do not log signed URLs or treat them as permanent asset IDs.

@@ -77,6 +77,8 @@ If actions, camera paths, or end states conflict, do not merge them silently. As
 
 Prefer one dominant camera move in a short shot. For requested compound movement, specify sequence, direction, and endpoint rather than simultaneous conflicting camera instructions.
 
+For continuous hand-object interaction, frame the full action path so the hands and object stay visible through the final handoff or placement.
+
 Do not write an ambiguous “move quickly.” State who or what moves, in which direction, at what pace, and where it stops.
 
 ## Short-duration fit
@@ -101,6 +103,10 @@ Keep the total duration consistent. Each shot should add information rather than
 
 Write action as starting pose → main change → settled state, leaving time to recognize the subject and result. Separate subject/prop directions from camera direction. Connect cuts through action, gaze, or composition rather than cramming a long story into a short shot. Align declared multi-shot parameters with prompt shot count and rhythm.
 
+If a hand-object interaction spans a cut, specify the same grip, object position, and contact point at the end of the outgoing shot and start of the incoming shot. Continue the action from the cut. Use a brief stable beat only when it fits the pacing.
+
+For ordered keyframes, plan the motion between adjacent states and settle into the last frame. Avoid overshooting or snapping back unless requested.
+
 ## Wording example
 
 For animating a product reference:
@@ -122,4 +128,4 @@ Do not invent performance claims, user testimony, statistics, pricing, awards, c
 
 ## Submission check
 
-Check duration, resolution, ratio, shot structure, and protected elements internally before submission. Confirm that the prompt does not repeat structured parameters, exceed the action budget, contain conflicting directions, or omit an observable end state. Do not show a pre-submission process message, credit warning, or separate confirmation unless a creative requirement is missing and the user must clarify it.
+Check duration, resolution, ratio, shot structure, and protected elements internally before submission. Confirm that the prompt does not repeat structured parameters, exceed the action budget, contain conflicting directions, or omit an observable end state. Follow the [deliverable rules](../SKILL.md) for settings-only requests, missing assets, and submission.

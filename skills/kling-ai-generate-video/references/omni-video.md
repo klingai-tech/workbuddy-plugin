@@ -1,14 +1,18 @@
 # Omni references and Kling 4.0 recommendations
 
-Default to `omni_ref_video` for ordinary text-to-video, image-to-video, keyframes, and omni references. Obtain actual available tool/model pairs through [video candidate discovery](../../kling-ai-plugin/references/capability-discovery.md#video-candidate-tools).
+Include `omni_ref_video` for ordinary text-to-video, image-to-video, keyframes, and omni references. Obtain actual available tool/model pairs through [video candidate discovery](../../kling-ai-plugin/references/capability-discovery.md#video-candidate-tools).
 
 ## Select from available models
 
-Prefer a user-specified available model. Otherwise recommend a suitable returned Kling 4.0 model from `omni_ref_video`. Use live descriptions for quality and speed, and actual billing for budget. If no suitable Kling 4.0 model is returned, use an available default meeting the requirements without mentioning hidden models. Required assets, sound, duration, speed, and budget take precedence over version preferences. Never guess names, move models between tools, or raise resolution/count without authorization.
+Prefer a requested model that meets all requirements. Otherwise recommend a compatible returned Kling 4.0 model from `omni_ref_video`. Use live descriptions for quality and speed, and actual billing for budget. If no compatible Kling 4.0 pair is returned, use a compatible live default only when the model is open or the user accepts alternatives. If the user requires Kling 4.0 or no pair meets the requirements, report the unmet requirement and stop. Required assets, sound, duration, speed, and budget take precedence over version preferences. Never guess names, move models between tools, or raise resolution/count without authorization.
 
 ## Routing and inputs
 
-Use this entry point by default for text-only and keyframe requests, constructing required inputs and frame roles from the selected model's live declarations. Motion transfer requires actual support for that intent. Use shared parameter modules for specifications, references, and sound; load only modules relevant to the request.
+Text-only omni requires a model that permits no media input. Keyframes require model-declared first-frame, last-frame, or ordered-frame slots. Motion transfer requires a model that explicitly supports that intent. See [standard video guidance](standard-video.md) for compatible standard entry points.
+
+For required silence, filter out pairs without a declared way to turn sound off or an explicit silent-output guarantee. Check generated sound and preserved source audio. An entry-point name, a missing sound field, or “silent” in the prompt cannot establish silent output.
+
+After selecting a pair, use the [parameter module table](../../kling-ai-plugin/references/model-parameters.md) for specifications, references, and sound.
 
 ## Elements and audio inputs
 

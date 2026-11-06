@@ -1,11 +1,19 @@
 ---
 name: kling-ai-generate-video
-description: Use Kling AI in WorkBuddy for text-to-video, image-to-video, omni references, keyframes, or motion control, including ads, short films, and single- or multi-shot creation. Use current account capabilities and the shared lifecycle for existing tasks.
+description: Write Kling AI video prompts or storyboards in WorkBuddy, request missing assets, prepare final generation settings, or run text-to-video, image-to-video, omni references, keyframes, and motion control. Use the shared lifecycle for existing tasks.
 ---
 
 # Kling AI video generation
 
-Turn the request into coherent motion direction and one authorized remote generation. Use live tools and models from `kling-ai-plugin` in this package's `mcp.json`; do not define another endpoint here.
+Use live tools and models from `kling-ai-plugin` in this package's `mcp.json`. Identify the deliverable for this turn.
+
+| Current request | Deliverable |
+| --- | --- |
+| Prompt or storyboard only | Use [motion and shot planning](references/motion-and-shots.md) and finish with the creative text. This step needs no account query, model selection, upload, or invitation to generate |
+| Required asset is missing | Ask only for the asset and explain its role, such as a product photo needed as the first frame. Prepare settings after the asset is supplied |
+| Final settings only | Discover compatible pairs. Present the mode, model, prompt summary, duration, resolution, ratio, count, shot structure, reference roles, and required billing disclosure. Wait for approval |
+| Authorized generation | Follow the workflow and submit once under the existing authorization |
+| Existing task | Use the known task number and follow [task results](../kling-ai-plugin/references/task-results.md) |
 
 ## Operating rules
 
@@ -21,15 +29,15 @@ Before generation, obtain candidates through [capability discovery](../kling-ai-
 
 ## Default video recommendation
 
-For ordinary text-to-video, image-to-video, keyframes, and omni references, prefer a suitable Kling 4.0 model from `omni_ref_video`, which is broadly available. Read [omni recommendations](references/omni-video.md) and discover models through [video candidate tools](../kling-ai-plugin/references/capability-discovery.md#video-candidate-tools). Use canonical names and parameters from the live response; never infer availability from this recommendation. Discovery failure requires refreshing the connection or reporting the problem before selection. Motion control and other specialized requirements use entry points supporting their required capabilities.
+Include `omni_ref_video` among the candidates for ordinary text-to-video, image-to-video, and keyframes. Prefer a returned Kling 4.0 model from that entry point when it satisfies the full request. Read [omni recommendations](references/omni-video.md) and discover models through [video candidate tools](../kling-ai-plugin/references/capability-discovery.md#video-candidate-tools). Use canonical names and parameters from the live response; never infer availability from this recommendation. Discovery failure requires refreshing the connection or reporting the problem before selection. Motion control and other specialized requirements use entry points supporting their required capabilities.
 
 ## Workflow
 
-1. Select the tool/model pair using recommendations and live responses, preferring a requested available model. Use the module table for specifications, required/optional inputs, and sound; do not preload irrelevant modules.
+1. Capture model restrictions, reference roles, sound, duration, ratio, resolution, count, and shot requirements. Filter live tool/model pairs against those requirements before ranking them. Use the module table for the selected pair.
 2. Read [motion and shot planning](references/motion-and-shots.md) for every new generation, edit, or variant. Select a profile governing motion budget, camera path, continuity anchors, and acceptance checks. Only read-only queries and authorized retries with unchanged parameters may skip it. Add [scene patterns](references/scene-patterns.md) when products, UGC, explainers, multi-shot stories, or social formats need further decisions. A complete existing plan does not replace motion planning.
 3. Internally establish intended use, protected subjects, and target action. Ask only about blocking assets/dialogue or conflicting requirements; choose ordinary camera movement, lighting, and unspecified options reasonably instead of requiring a questionnaire.
-4. Write a motion-centered prompt covering subject/camera/environment movement, rhythm, continuity, and protected elements. Translate abstract quality into lighting, materials, depth, and composition.
-5. Validate parameters, check credits, and submit once through the shared workflow. After acceptance, follow task results. Do not generate comparison samples automatically or create an unrequested final version after a preview.
+4. Write a motion-centered prompt covering subject/camera/environment movement, rhythm, continuity, and protected elements. Translate abstract quality into lighting, materials, depth, and composition. Upload assets when needed after selection. Stop preparing the request if upload fails.
+5. Check actual arguments against the request. For settings-only requests, present the proposal and finish. For authorized generation, check credits, submit once through the shared workflow, and follow task results. Do not generate comparison samples automatically or create an unrequested final version after a preview.
 
 ## Creative constraints
 

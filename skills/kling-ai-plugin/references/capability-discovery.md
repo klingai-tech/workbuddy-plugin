@@ -1,6 +1,6 @@
 # Discover account capabilities
 
-Read only for generation or model selection. Task, credit, and asset queries do not need a model list.
+Read only for generation preparation, submission, or model selection. Prompt-only work, requests for missing assets, and task, credit, or asset queries need no model list.
 
 ## Discovery order
 
@@ -11,9 +11,9 @@ Read only for generation or model selection. Task, credit, and asset queries do 
 
 ## Video candidate tools
 
-The broadly available `omni_ref_video` entry point is the default for ordinary text, image, keyframe, Element, and audio-reference video. Prefer its suitable returned Kling 4.0 models. When `who_am_i` declares tool filtering, query `["omni_ref_video"]` by default; otherwise read the complete response. Required inputs and combinations follow the selected model.
+For text-driven video, compare `text_to_video` and `omni_ref_video` when present. For image-driven video, compare `image_to_video` and `omni_ref_video` when present. For keyframes, Elements, and audio references, query entry points that declare the relevant capabilities. Prefer a returned Kling 4.0 pair that meets all required conditions.
 
-Expand discovery for an explicitly requested entry point/model or specialized capabilities such as motion transfer. Discover `omni_ref_video` directly when searching tools by name. If discovery fails, refresh the connection or explain the specific failure; do not automatically fall back to basic video tools.
+Respect user restrictions on tools and models. Discover dedicated entry points for specialized capabilities such as motion transfer. If discovery succeeds, apply [video routing](../../kling-ai-generate-video/references/omni-video.md) to the returned pairs. If discovery fails, refresh the connection or report the specific failure. Stop if capabilities remain unverified.
 
 ## Reuse and boundaries
 

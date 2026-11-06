@@ -10,4 +10,18 @@ Read only when constructing the outer generation payload. Use [capability discov
 - Satisfy both the tool schema and the selected model's parameters and conditional limits. Generic tool descriptions or other-model examples cannot override capabilities. Refresh conflicting discovery and stop if the mismatch persists.
 - Element and image/video subject support depend on the selected tool/model declarations and conditions in `who_am_i`, not merely the presence of `elements`, tool descriptions, or historical examples.
 
+If the selected model supports a 7-second, 9:16 clip, bind both settings separately under their actual field names. Reference assets belong in the outer `inputs[]` slots.
+
+```json
+{
+  "arguments": [
+    {"name": "prompt", "value": "Creative video description"},
+    {"name": "duration", "value": "7"},
+    {"name": "aspect_ratio", "value": "9:16"}
+  ]
+}
+```
+
+Before submitting, check each explicit requirement against the actual argument, reference slot, or fixed model setting. Use the submitted settings in the result summary.
+
 A returned `generationId` means created/accepted, not completed. Continue with [task results](task-results.md); `creditsConsumed` does not establish success.
