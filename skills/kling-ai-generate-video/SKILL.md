@@ -37,7 +37,7 @@ Include `omni_ref_video` among the candidates for ordinary text-to-video, image-
 2. Read [motion and shot planning](references/motion-and-shots.md) for every new generation, edit, or variant. Select a profile governing motion budget, camera path, continuity anchors, and acceptance checks. Only read-only queries and authorized retries with unchanged parameters may skip it. Add [scene patterns](references/scene-patterns.md) when products, UGC, explainers, multi-shot stories, or social formats need further decisions. A complete existing plan does not replace motion planning.
 3. Internally establish intended use, protected subjects, and target action. Ask only about blocking assets/dialogue or conflicting requirements; choose ordinary camera movement, lighting, and unspecified options reasonably instead of requiring a questionnaire.
 4. Write a motion-centered prompt covering subject/camera/environment movement, rhythm, continuity, and protected elements. Translate abstract quality into lighting, materials, depth, and composition. Upload assets when needed after selection. Stop preparing the request if upload fails.
-5. Check actual arguments against the request. For settings-only requests, present the proposal and finish. For authorized generation, check credits, submit once through the shared workflow, and follow task results. Do not generate comparison samples automatically or create an unrequested final version after a preview.
+5. Check actual arguments against the request, especially the top-level `model`, required prompt, and first-frame slot. For an explicit specification such as `1080p`, verify the resolution enum and its conditions for the selected tool and model. For settings-only requests, present the proposal and finish. For authorized generation, check credits, submit once through the shared workflow, and follow task results. Do not generate comparison samples automatically or create an unrequested final version after a preview.
 
 ## Creative constraints
 
@@ -55,6 +55,7 @@ When the host can inspect video, check opening, key action, transitions, and end
 
 - Authorization: use WorkBuddy's native MCP connection flow.
 - Invalid model/parameters: refresh capabilities and prepare a correction without automatically resubmitting a prior generation.
-- Insufficient credits: explain and stop until recharged; do not retry automatically.
+- Invalid resource in image-to-video or omni references: follow [asset troubleshooting](../kling-ai-plugin/references/troubleshooting.md#upload-or-asset-reference-failure) for first frames and references. Recover a known current video task by its own number. Use source task numbers only to look up source assets.
+- Insufficient credits: follow [recovery](../kling-ai-plugin/references/tool-workflows.md#resume-after-insufficient-credits) and retain the original model, specifications, prompt, and references. When resuming image-to-video, validate the original first-frame slot and reference. Use the original settings when the user explicitly asks to continue after recharging.
 - Lost response: recover or report unknown through task results; never replay blindly.
 - Provider failure: summarize safely, retain the task ID, and do not automatically resubmit.

@@ -37,8 +37,10 @@ widget refreshes progress; otherwise Kling AI checks at service-allowed
 intervals until success or failure. If the current turn ends first, it returns
 a **task number** that can be used to query the same task later.
 
-If credits are insufficient, recharge the Kling account and try again. Completed
-results include the primary image, video, or result link supplied by Kling.
+If credits are insufficient, sign in to the same account on the official Kling
+site to recharge. Then return to this conversation and say "Continue the previous
+task." WorkBuddy checks an existing task first and checks credits before any new
+submission. Completed results include the primary image, video, or result link supplied by Kling.
 Temporary result links can be refreshed by querying the original task number;
 the work also remains available in the authorized account's Kling generation
 history.

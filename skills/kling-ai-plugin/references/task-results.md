@@ -16,8 +16,11 @@ Use actual host feedback to establish whether the widget mounted and can refresh
 | Explicit display of existing results | Reuse the working widget; otherwise call `query_result` once if exposed, or use `query_tasks` for media/text fallback |
 | An authorized next step needs a predecessor but the host does not return widget updates | Query the original task for the dependency under these rules; reuse the component without duplicate generation/display |
 | A subsequent generation needs a current source URL | Query the source task once for asset preparation, without recreating the result card |
+| The user reports a missing video and the submission's task number is known | Query the original task. Report progress, deliver the usable video on success, or report failure with its task number and reason. If the query returns an invalid resource error, report the last confirmed status under the rules below |
 
-When polling is necessary, use provider-allowed intervals until success or failure. Stop on user cancellation, turn timeout, host limits, rate limiting, or query errors; return status and task number without resubmission. If no task number exists, report unknown.
+When polling, query the same `generationId` at provider-allowed intervals until success or failure. If `query_tasks` returns an invalid resource error and explicitly says to check the same task later, retry the status query once at a provider-allowed interval. Stop polling on the same error again, user cancellation, turn timeout, host limits, rate limiting, or another query error.
+
+When a query fails or polling stops early, return the task number and the last confirmed status and explain that the refresh stopped. Label a known submitted or processing state as the last confirmed status. Report status as unconfirmed only if no status for the task has been confirmed. Do not resubmit generation. A successful standalone status query returns the current snapshot and task number.
 
 Avoid duplicate media/download links when the widget works. Honor explicit requests for links or specific works. Without a widget, deliver usable returned media or a primary result link; show requested multiple works rather than forcing batches to one result.
 

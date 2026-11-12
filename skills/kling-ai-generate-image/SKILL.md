@@ -13,6 +13,7 @@ For generation preparation or submission, use live tools and models from `kling-
 
 - Use host-managed OAuth. Never request or expose API keys, tokens, cookies, authorization headers, or upload tickets. Requested preview/download URLs may be delivered, but never logged or used as permanent identities.
 - A generation request authorizes one submission after resolving missing inputs that materially affect the result. Do not add credit warnings or separate confirmation.
+- Before calling `text_to_image` or `image_to_image`, call `query_membership_and_credits` on the same connection. If the current balance cannot be confirmed, keep the request pending and explain the issue. If the balance is nonpositive or explicitly insufficient, pause and follow [recovery](../kling-ai-plugin/references/tool-workflows.md#resume-after-insufficient-credits). Never use generation to probe the balance.
 - Submit each explicitly authorized step once. Run distinct tasks and cross-media dependencies serially through the shared workflow. Never blindly retry failed or ambiguous submissions.
 - Discover live definitions before selecting tools, models, input names, or enum values. Live provider fields override examples.
 - Upload attached references through the remote upload workflow when needed, preserving the exact provider references.
@@ -27,11 +28,14 @@ When no model is specified, recommend a suitable available image model.
 
 Skip generation steps for an existing-task query.
 
+When the user asks to resume, follow [recovery](../kling-ai-plugin/references/tool-workflows.md#resume-after-insufficient-credits) and query the original task if its task number is known. Deliver the existing status or result through the task results workflow. Enter the steps below and check credits before submission only if the recovery workflow establishes that a new submission can proceed.
+
 1. Determine candidate entry points from the mode table and supplied assets. Discover relevant models and check required capabilities before choosing one or constructing parameters.
 2. Load only applicable parameter modules. Skip output-selection advice only when all relevant specification fields have a single legal value. Resolve unsupported requirements before reading detailed instructions for an unavailable feature.
 3. Read [prompt construction](references/prompt-construction.md) for every new generation, edit, or variant. Select a quality profile to decide visible facts and acceptance checks. Only read-only queries and authorized retries with unchanged parameters may skip it. Add [scene patterns](references/scene-patterns.md) when further scene decisions are needed. An existing complete plan is not a reason to skip prompt construction.
 4. Internally establish intended use, locked facts, and creative scope. Ask only about missing critical identity/copy or conflicting requirements; choose ordinary lighting, backgrounds, and unspecified optional settings reasonably.
-5. Align the prompt with the selected model and actual asset bindings. When generation is authorized, submit once through the shared workflow and follow task results.
+5. Align the prompt with the actual assets. Validate the top-level `model`, the model's required `arguments[]` entries, and its `inputs[]` slots. Bind the reference image to `image_1` when the model requires that slot. Use the exact `inputType` literal from the tool schema, including uppercase `URL` when declared. Use the full URL returned by upload. On resume, reuse valid source URLs and upload again only when the original reference has expired or is unusable.
+6. After preparing the parameters and assets, check the current balance on the same connection before submission. Pause when the balance is unavailable, nonpositive, or explicitly insufficient, even if upload succeeded. When a new submission can proceed, submit once and follow task results.
 
 ## Generation modes
 
@@ -62,7 +66,8 @@ When the host can inspect original outputs, check identity, product structure, t
 ## Failure handling
 
 - Authorization: use WorkBuddy's native MCP connection flow.
-- Unsupported parameters: refresh capabilities and prepare a correction, without automatically resubmitting a prior generation.
-- Insufficient credits: explain and stop until recharged; do not retry automatically.
+- Invalid parameters or assets: refresh capabilities and prepare a correction. Preserve the prompt, generation mode, and reference roles. Correct the invalid fields or supply missing assets. Handle prior submissions through the shared workflow.
+- Invalid resource in image-to-image: follow [asset troubleshooting](../kling-ai-plugin/references/troubleshooting.md#upload-or-asset-reference-failure). Keep the source image task number distinct from the current submission's task number. Only a number confirmed to belong to this submission can recover it.
+- Insufficient credits: pause and follow [recovery](../kling-ai-plugin/references/tool-workflows.md#resume-after-insufficient-credits). Keep the original prompt and settings, plus the source image and its role for image-to-image. On an explicit request to resume, query the existing task first and check credits only when a new submission can proceed.
 - Lost response: recover or report unknown through task results; never replay blindly.
 - Provider failure: summarize safely, retain the task ID, and do not automatically resubmit.
