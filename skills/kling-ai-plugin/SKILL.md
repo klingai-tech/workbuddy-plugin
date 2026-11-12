@@ -10,17 +10,19 @@ description: 在 WorkBuddy 中为 Kling AI 编写图像提示词、视频提示�
 ## 按请求加载规则
 
 - 先区分本轮要交付的是创作文本、待确认的生成设置、已授权的生成，还是已有任务的结果。只写提示词或分镜时直接交付创作内容，无需查询账号或上传。只准备最终设置时查询实时能力，给出方案后等待用户确认。
-- 图片提示词、图片生成、编辑、海报与参考图创作使用[图像生成 Skill](../kling-ai-generate-image/SKILL.md)。
+- **图片生成提交前先查余额。** 调用 `text_to_image` 或 `image_to_image` 前，必须先调用同一连接的 `query_membership_and_credits`。未查到本轮余额、余额非正数或明确不足时，本轮不调用生成工具。暂停时按[恢复生成](references/tool-workflows.md#积分不足后的恢复)保留原任务。
+- 图片提示词、图片生成、编辑、海报与参考图创作使用[图像生成 Skill](../kling-ai-generate-image/SKILL.md)。图生图复用仍有效的原素材 URL，`inputType` 使用工具 Schema 的字面值，声明 `URL` 时使用大写 `URL`。
 - 视频提示词、分镜、缺少必需素材时的下一步、视频生成及选型使用[视频生成 Skill](../kling-ai-generate-video/SKILL.md)。生成时优先推荐当前账号返回且满足需求的 `omni_ref_video` 可灵 4.0 模型。
 - 只查进度、展示结果或刷新作品链接：只读[任务结果](references/task-results.md)，不加载生成推荐、模型参数或创作参考。
 - 新生成、编辑或已授权重试：按对应创作 Skill 选型，再执行[生成提交](references/tool-workflows.md)；多步骤按依赖顺序执行。
+- 充值后继续上次生成：按[恢复生成](references/tool-workflows.md#积分不足后的恢复)恢复当前会话中的原设置。只说“已充值”时检查余额；明确要求继续且已有任务编号时先查原任务，只有允许新提交时才检查余额。
 - 主体库、动作库或本地文件上传：读[素材工作流](references/asset-workflows.md)。只读素材查询不提交生成任务。
 - 准备生成设置或执行生成前先读[能力发现](references/capability-discovery.md)，选定当前账号可用的模型后，按[参数模块加载表](references/model-parameters.md)只读本次需要且受支持的规则。
-- 授权、上传、模型或服务错误：读[故障排查](references/troubleshooting.md)。需要请求示例时读[用法示例](references/prompt-examples.md)。
+- 授权、上传、模型或服务错误：读[故障排查](references/troubleshooting.md)。遇到「用同一生成 ID 重试」，先按[资源异常分流](references/troubleshooting.md#上传或素材引用失败)区分素材校验、生成提交与已有任务查询。需要请求示例时读[用法示例](references/prompt-examples.md)。
 
 ## 模型可见性与灰度
 
-- 当前账号的模型、参数、规格、输入类型与组合限制，统一以 `who_am_i` 的实时返回为准。`tools/list` 只确认入口存在及调用结构；会员页、工具描述和静态示例不能覆盖账号能力。
+- `tools/list` 确定入口和外层请求结构，当前账号的 `who_am_i` 确定该入口下模型的参数、规格和素材约束。即使工具 Schema 把 `model` 列为可选，生成调用也必须传顶层 `model`。用户未指定时按下方规则选型，把模型的规范 ID 显式写入请求。
 - 只有当前连接的 `tools/list` 返回目标工具，且当前账号的 `who_am_i.availableModels` 在该工具下列出目标模型时，才可展示、推荐或调用其模型名。工具数量（即使增加了全能参考工具）、描述中的举例或默认模型字段不能代替模型集合的授权判断。
 - 视频默认推荐 `omni_ref_video` 的 可灵 4.0 模型，图片默认推荐满足需求的可用图像模型；实际选型以当前账号返回的对应输出类型模型集合为准。
 - 用户点名但当前筛选集合未返回时，按[能力发现](references/capability-discovery.md)补查。若模型仅支持另一输出类型，说明用途不匹配。完整发现后仍未返回时，说明当前连接未返回所请求模型。用户限定只用该型号时，到此结束。允许替代时，只列出实际可用且符合需求的模型，变更模型或媒体类型须符合用户授权。
