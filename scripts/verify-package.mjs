@@ -39,6 +39,10 @@ const server = mcp.mcpServers?.["kling-ai-plugin"];
 check(server?.url === "https://klingai.com/mcp/plugin", "unexpected release MCP URL");
 check(server?.type === "streamable-http", "Kling MCP transport must be streamable-http");
 check(server?.timeout === 30000, "Kling MCP timeout must remain 30000");
+check(connector.auth_mode === "server-side", "Kling OAuth must use WorkBuddy server-side authorization");
+check(connector.server_auth?.auth_type === "mcp_oauth", "Kling OAuth must use dynamic client registration");
+check(connector.server_auth?.data?.mcp_oauth?.server_url === server?.url, "OAuth resource URL must match the MCP endpoint");
+check(connector.minWorkbuddyVersion === "4.24.0", "Kling server-side OAuth requires WorkBuddy 4.24.0");
 check(Array.isArray(packageJson.files) && JSON.stringify([...packageJson.files].sort()) === JSON.stringify([...releaseAllowlist].sort()), "package files must match the connector-only release allowlist");
 
 // Inspect files that will actually be shipped, not incidental files in the checkout.
