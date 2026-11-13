@@ -1,8 +1,16 @@
 # Image prompt construction
 
-## Minimally sufficient prompt
+## Decide whether to edit
 
-Preserve a prompt verbatim when the user explicitly requests it. Otherwise select only details that affect the result, with facts, exact text, and protected elements before atmosphere.
+- Preserve the prompt verbatim when the user explicitly requests it. Assess an existing prompt against the relevant dimensions for the task, such as subject, locked facts, scene, composition, lighting, style, and constraints. Leave optional creative details to the model.
+- If those dimensions are clear, consistent, and sufficient to proceed, return or submit the original prompt verbatim. Apply the same check to a general request to optimize it.
+- Use the current request and references to resolve material gaps or conflicts. If a key decision is still ambiguous, ask the user and wait for their answer before submission.
+- When the answer resolves a specific ambiguity in the original prompt, replace only that passage. Use context to understand the request and retain the wording of details the prompt already conveys.
+- For a clear gap or an explicit change, edit only the words needed and preserve the rest verbatim. If one addition is sufficient, append it to the original prompt. For copy, add the requested wording and placement. Leave unspecified typography, colors, and margins to the model. Include restrictions on other text only when the user explicitly requests them. When the selected tool requires reference syntax, change only the necessary references.
+
+## Writing or completing a prompt
+
+Select the details needed for the task, with facts, exact text, and protected elements before atmosphere.
 
 Separate the brief into three groups:
 
@@ -71,7 +79,7 @@ The loaded reference-input module handles inspection, roles, and limits. Write a
 
 - Preserve user copy character-for-character.
 - Use a copy-safe base for later typography only when the user accepts that workflow and an appropriate design tool exists. Do not replace a requested finished image with a text-free base.
-- For generated text, specify exact wording, position, hierarchy, and language once. Do not add unrelated copy or remove existing labels. Preserve multiple requested passages without shortening or rewriting them. Inspect readability before judging; correct prompt text does not prove correct output text.
+- For generated text, use the exact wording and any position, hierarchy, and language specified by the user. If the user asks for a single headline, add only that headline and preserve existing labels. Preserve multiple requested passages without shortening or rewriting them. Inspect readability before judging; correct prompt text does not prove correct output text.
 
 ## Controlled variants
 

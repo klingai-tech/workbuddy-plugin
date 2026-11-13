@@ -1,8 +1,15 @@
 # Motion and shot planning
 
+## Decide whether to edit
+
+- Preserve the prompt verbatim when the user explicitly requests it. Assess an existing prompt against the relevant dimensions for the task, such as subject, action, camera, timing, continuity, and constraints. Leave optional creative details to the model.
+- If those dimensions are clear, consistent, and sufficient to proceed, return or submit the original prompt verbatim. Apply the same check to a general request to optimize it.
+- Use the current request and references to resolve material gaps or conflicts. If a key decision is still ambiguous, ask the user and wait for their answer before submission.
+- Once the intent is clear, change only the words needed to resolve the issue or apply the requested edit. Preserve the rest verbatim. When the request already contains a usable description of a missing detail, append it to the original prompt. For a missing ending, use the user's action, timing, and end position. Leave intermediate motion to the model unless the user specified it. When the selected tool requires reference syntax, change only the necessary references.
+
 ## Motion-prompt principles
 
-Preserve a prompt verbatim when explicitly requested. Otherwise prioritize actual action and continuity, supported by light and materials, without stacking generic quality adjectives.
+When writing or completing a prompt, prioritize actual action and continuity, supported by light and materials.
 
 - Lock user facts, opening state, identity, and product structure before defining allowed change.
 - Describe time in order: opening state → subject action → observable end state. Separate subject, camera, and environmental motion instead of using abstractions such as “dynamic scene.”

@@ -5,7 +5,7 @@ description: Write or refine Kling AI image prompts in WorkBuddy, or generate, e
 
 # Kling AI image generation
 
-For a prompt-only request, follow [prompt construction](references/prompt-construction.md) and preserve the requested composition and edit scope, such as copy space on the left. Finish with the requested prompt. Account queries, uploads, model or output recommendations, and invitations to generate are outside this step.
+For a prompt-only request, use [prompt construction](references/prompt-construction.md) to decide whether changes are needed and preserve the requested composition and edit scope, such as copy space on the left. Finish with the requested prompt. Account queries, uploads, model or output recommendations, and invitations to generate are outside this step.
 
 For generation preparation or submission, use live tools and models from `kling-ai-plugin` in this package's `mcp.json`. If the user asks for final settings only, verify the model, prompt, specifications, and reference roles. Present the settings and wait for approval.
 
@@ -32,9 +32,9 @@ When the user asks to resume, follow [recovery](../kling-ai-plugin/references/to
 
 1. Determine candidate entry points from the mode table and supplied assets. Discover relevant models and check required capabilities before choosing one or constructing parameters.
 2. Load only applicable parameter modules. Skip output-selection advice only when all relevant specification fields have a single legal value. Resolve unsupported requirements before reading detailed instructions for an unavailable feature.
-3. Read [prompt construction](references/prompt-construction.md) for every new generation, edit, or variant. Select a quality profile to decide visible facts and acceptance checks. Only read-only queries and authorized retries with unchanged parameters may skip it. Add [scene patterns](references/scene-patterns.md) when further scene decisions are needed. An existing complete plan is not a reason to skip prompt construction.
+3. Read [prompt construction](references/prompt-construction.md) for every new generation, edit, or variant. Use a quality profile to check an existing prompt or guide a new one. Only read-only queries and authorized retries with unchanged parameters may skip it. Add [scene patterns](references/scene-patterns.md) when further scene decisions are needed.
 4. Internally establish intended use, locked facts, and creative scope. Ask only about missing critical identity/copy or conflicting requirements; choose ordinary lighting, backgrounds, and unspecified optional settings reasonably.
-5. Align the prompt with the actual assets. Validate the top-level `model`, the model's required `arguments[]` entries, and its `inputs[]` slots. Bind the reference image to `image_1` when the model requires that slot. Use the exact `inputType` literal from the tool schema, including uppercase `URL` when declared. Use the full URL returned by upload. On resume, reuse valid source URLs and upload again only when the original reference has expired or is unusable.
+5. Reuse a sufficient prompt verbatim. Make only necessary local edits or write a new prompt as needed. Align the prompt with the actual assets. Validate the top-level `model`, the model's required `arguments[]` entries, and its `inputs[]` slots. Bind the reference image to `image_1` when the model requires that slot. Use the exact `inputType` literal from the tool schema, including uppercase `URL` when declared. Use the full URL returned by upload. On resume, reuse valid source URLs and upload again only when the original reference has expired or is unusable.
 6. After preparing the parameters and assets, check the current balance on the same connection before submission. Pause when the balance is unavailable, nonpositive, or explicitly insufficient, even if upload succeeded. When a new submission can proceed, submit once and follow task results.
 
 ## Generation modes
