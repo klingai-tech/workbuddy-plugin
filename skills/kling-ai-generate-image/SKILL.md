@@ -22,7 +22,9 @@ description: 在 WorkBuddy 中为 Kling AI 编写或优化图像提示词，或�
 
 生成前按[能力发现](../kling-ai-plugin/references/capability-discovery.md)获取候选，遵守[账号可见性](../kling-ai-plugin/SKILL.md#模型可见性与灰度)。选定模型后读取[参数模块加载表](../kling-ai-plugin/references/model-parameters.md)，只加载满足触发条件的文件；提交时读[生成流程](../kling-ai-plugin/references/tool-workflows.md)。只查已有任务直接读[任务结果](../kling-ai-plugin/references/task-results.md)。
 
-未指定模型时，默认推荐满足需求的可用图像模型。
+未指定模型时，优先使用当前入口返回且满足需求的 `defaultModel`。用户明确要求使用默认模型时，按当前入口的 `defaultModel` 选型，规格以该模型的实时能力为准。
+
+生成连续组图时，优先选择当前账号返回且明确支持所需张数和组图的默认模型。用户未限定模型且默认模型不满足时，从当前入口选择兼容模型。仅在所选模型声明组图开关时传入该字段，张数按其实际字段设置。支持多张输出本身不能证明支持连续组图。没有兼容模型时说明限制。
 
 ## 工作流程
 

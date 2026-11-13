@@ -149,11 +149,16 @@ with zipfile.ZipFile(f"kling-workbuddy-v{package['version']}.zip") as archive:
   assert.ok(entries.every((name) => !name.split("/").some((part) => part === ".DS_Store" || part === "__MACOSX" || part.startsWith("._"))));
 });
 
-test("connector examples guide Kling 4.0 videos without latest-model claims", () => {
+test("connector offers five examples per language with an image series and both 4.0 video models", () => {
   const connector = JSON.parse(readFileSync(join(root, "connector-meta.json"), "utf8"));
-  for (const key of ["examples_zh", "examples_en"]) {
-    assert.doesNotMatch(connector[key].join("\n"), /最新|latest/i);
-    assert.match(connector[key].join("\n"), key === "examples_zh" ? /使用可灵 4\.0/ : /Kling 4\.0/);
-    assert.doesNotMatch(connector[key].join("\n"), /V4/i);
+  for (const [examples, imageSeries, videoModels] of [
+    [connector.examples_zh, /一次生成 3 张连续组图/, [/可灵 4\.0(?! Flash)/, /可灵 4\.0 Flash/]],
+    [connector.examples_en, /series of three images in one request/, [/Kling 4\.0(?! Flash)/, /Kling 4\.0 Flash/]],
+  ]) {
+    assert.equal(examples.length, 5);
+    assert.match(examples[0], imageSeries);
+    const text = examples.join("\n");
+    for (const modelName of videoModels) assert.match(text, modelName);
+    assert.doesNotMatch(text, /最新|latest|V4/i);
   }
 });
