@@ -8,6 +8,8 @@ Prefer a requested model that meets all requirements. Otherwise recommend a comp
 
 ## Routing and inputs
 
+When the user names Kling 4.0 or Kling 4.0 Flash, match the full model name against the current account's live response. Kling 4.0 image-to-video supports first, last, and intermediate keyframes, and its Omni-Ref accepts images, video, audio, and Elements. Flash image-to-video uses a single first frame, and its Omni-Ref accepts images, video, and Elements. Check the declared input slots for separate audio references. Use output settings for synchronized or preserved source audio.
+
 Text-only omni requires a model that permits no media input. Keyframes require model-declared first-frame, last-frame, or ordered-frame slots. Motion transfer requires a model that explicitly supports that intent. See [standard video guidance](standard-video.md) for compatible standard entry points.
 
 For required silence, filter out pairs without a declared way to turn sound off or an explicit silent-output guarantee. Check generated sound and preserved source audio. An entry-point name, a missing sound field, or “silent” in the prompt cannot establish silent output.

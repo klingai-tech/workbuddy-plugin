@@ -8,8 +8,10 @@ This package uses only the Global Kling MCP endpoint configured in `mcp.json`:
 
 ## Capabilities
 
-- Text-to-image and image-to-image generation
-- Text-to-video and image-to-video generation
+- Text-to-image and reference-guided image editing. When no model is specified, use a compatible default image model returned for the current account.
+- Kling 4.0 supports text-to-video, image-to-video with first, last, and intermediate keyframes, and Omni-Ref with images, videos, audio, and Elements. It generates 3–30 seconds at 720p, with 1080p available to eligible accounts.
+- Kling 4.0 Flash supports text-to-video, image-to-video from a single first frame, and Omni-Ref with images, videos, and Elements. It generates 3–20 seconds at 720p.
+- Both Omni-Ref models support smart shot splitting and can generate synchronized audio or preserve source video audio. The two audio settings are mutually exclusive.
 - Subject library (Elements): create, browse, inspect, update, delete, and reuse subjects
 - Motion-library browsing and motion control from a saved motion or reference video
 - Two-step local asset upload when supported by the current Global MCP and host
@@ -29,10 +31,9 @@ into a conversation.
 ## Use
 
 Describe the image or video you want in natural language. When no model is
-specified, video defaults to the broadly available `omni_ref_video` entry point
-and its suitable Kling 4.0 models; use an available default if none is suitable.
-Images use a suitable available image model. Omni references can combine Elements,
-images, video, and audio according to the selected model's live capabilities. Each authorized generation step is submitted once. A working result
+specified, prefer a compatible Kling 4.0 model returned for the current account
+under `omni_ref_video`. Use a compatible available default if none is suitable.
+Each authorized generation step is submitted once. A working result
 widget refreshes progress; otherwise Kling AI checks at service-allowed
 intervals until success or failure. If the current turn ends first, it returns
 a **task number** that can be used to query the same task later.

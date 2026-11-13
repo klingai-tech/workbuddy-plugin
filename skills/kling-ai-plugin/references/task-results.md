@@ -28,7 +28,7 @@ Avoid duplicate media/download links when the widget works. Honor explicit reque
 
 - Normalize status according to live schema/response semantics. Nonterminal means submitted/processing. Report failure and retain the ID, but summarize errors rather than exposing credentials or model names outside the current available set.
 - Summarize the settings actually submitted. When no audio settings were sent and the output was not inspected, leave audio status unspecified. Report a charge only when the service returns the actual amount, such as `creditsConsumed`. Submission count and balance checks do not establish the charge.
-- Claim completion only when the task succeeds and at least one usable work matches the requested media type. If work-level status exists, require success; otherwise use terminal task status and media. A URL on an explicitly unsuccessful work is not a finished result.
+- Report full completion when the task succeeds and the usable works meet the requested media type and count. When a terminal task returns only some usable works, deliver them and report the actual count, for example “2 of 3 images generated.” If work-level status exists, require success. Otherwise use terminal task status and media. A URL on an explicitly unsuccessful work is not a finished result.
 - Prefer usable `urlWithoutWatermark`, then `url`. `coverUrl` is a cover, not a video. Preserve mappings across multiple outputs and report partial success accurately.
 - Terminal success without usable works is a result inconsistency: explain without generating replacements. Do not log signed URLs or treat them as permanent asset IDs.
 
