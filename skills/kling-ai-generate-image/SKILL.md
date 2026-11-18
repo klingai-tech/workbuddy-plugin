@@ -22,9 +22,9 @@ Read [asset workflows](../kling-ai-plugin/references/asset-workflows.md) for sub
 
 Before generation, obtain candidates through [capability discovery](../kling-ai-plugin/references/capability-discovery.md) and honor [account visibility](../kling-ai-plugin/SKILL.md#account-visibility-and-rollout). After selection, read the [parameter module table](../kling-ai-plugin/references/model-parameters.md), loading only applicable files. Submit through [generation submission](../kling-ai-plugin/references/tool-workflows.md). For existing tasks, go directly to [task results](../kling-ai-plugin/references/task-results.md).
 
-When no model is specified, prefer the current entry point's returned `defaultModel` if it meets the request. When the user explicitly requires the default model, use that model's live capabilities.
+When the user leaves the model unspecified or asks for the default image model, prefer Kling Image 4.0 (`kling-image-v4_0`) if the current entry point returns it and it meets the request. If it is unavailable or unsuitable, prefer a compatible returned `defaultModel`, then another compatible model from the same entry point. Honor any model the user names.
 
-For a continuous image series, prefer the available default when it explicitly supports both the series and the requested count. If the user leaves model choice open and the default is unsuitable, select a compatible model from the same entry point. Send a series-mode switch only when the selected model declares one, and use its declared count field. A model's ability to return several images alone does not establish series support. Explain the limitation when no compatible model is available.
+For a continuous image series, use the same selection order and consider only models that explicitly support series generation and the requested count. Send a series-mode switch only when the selected model declares one, and use its declared count field. A model's ability to return several images alone does not establish series support. Explain the limitation when no compatible model is available.
 
 ## Kling Image 4.0 and image series
 

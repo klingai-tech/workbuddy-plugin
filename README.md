@@ -8,7 +8,7 @@ This package uses only the Global Kling MCP endpoint configured in `mcp.json`:
 
 ## Capabilities
 
-- [Kling Image 4.0](https://kling.ai/quickstart/kling-image-4-user-guide) supports text-to-image, reference-guided image editing, native 8K, and coherent image series. Use a compatible default image model if unspecified; resolution and per-request count depend on the live MCP capabilities for the account.
+- [Kling Image 4.0](https://kling.ai/quickstart/kling-image-4-user-guide) supports text-to-image, reference-guided image editing, native 8K, and coherent image series. When no model is specified, prefer Kling Image 4.0 if it is available and fits the request. Resolution and per-request count depend on the live MCP capabilities for the account.
 - Kling 4.0 supports text-to-video, image-to-video with first, last, and intermediate keyframes, and Omni-Ref with images, videos, audio, and Elements. It generates 3–30 seconds at 720p, with 1080p available to eligible accounts.
 - Kling 4.0 Flash supports text-to-video, image-to-video from a single first frame, and Omni-Ref with images, videos, and Elements. It generates 3–20 seconds at 720p.
 - Both Omni-Ref models support smart shot splitting and can generate synchronized audio or preserve source video audio. The two audio settings are mutually exclusive.
@@ -31,8 +31,9 @@ into a conversation.
 ## Use
 
 Describe the image or video you want in natural language. When no model is
-specified, prefer a compatible Kling 4.0 model returned for the current account
-under `omni_ref_video`. Use a compatible available default if none is suitable.
+specified, prefer Kling Image 4.0 for images if it is available and fits the
+request. For video, prefer a compatible Kling 4.0 model returned for the current
+account under `omni_ref_video`. Use a compatible available default if none is suitable.
 Each authorized generation step is submitted once. A working result
 widget refreshes progress; otherwise Kling AI checks at service-allowed
 intervals until success or failure. If the current turn ends first, it returns
