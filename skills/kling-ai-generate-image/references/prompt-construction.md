@@ -20,6 +20,8 @@ Separate the brief into three groups:
 
 The final prompt should be one coherent visual description. Every added phrase must create an observable difference. Do not fill every category merely to sound professional. Keep ratio, resolution, result count, and model in structured parameters rather than repeating them in the prompt.
 
+For a coherent image series, describe the subject, wardrobe, and look shared across the set, then list the action or composition for each image in order. Set resolution and count through the selected model’s structured parameters. If the original images can be inspected, check sequence and subject continuity.
+
 ## Delivery-grade quality profiles
 
 Choose one primary profile from the intended use; add a secondary profile only when the request genuinely spans contexts. A profile controls visible prompt facts and the acceptance gate, not model or credit level.

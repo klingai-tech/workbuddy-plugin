@@ -163,11 +163,11 @@ test("Kling 4.0 guidance is allowed in Global documentation", (t) => {
   assert.equal(result.status, 0, result.output);
 });
 
-test("connector offers five examples per language with an image series and both 4.0 video models", () => {
+test("connector offers five examples per language with an 8K Image 4.0 series and both 4.0 video models", () => {
   const connector = JSON.parse(readFileSync(join(root, "connector-meta.json"), "utf8"));
   for (const [examples, imageSeries, videoModels] of [
-    [connector.examples_zh, /一次生成 3 张连续组图/, [/可灵 4\.0(?! Flash)/, /可灵 4\.0 Flash/]],
-    [connector.examples_en, /series of three images in one request/, [/Kling 4\.0(?! Flash)/, /Kling 4\.0 Flash/]],
+    [connector.examples_zh, /可灵图片 4\.0 一次生成 3 张 8K 连续组图/, [/可灵 4\.0(?! Flash)/, /可灵 4\.0 Flash/]],
+    [connector.examples_en, /Kling Image 4\.0.*series of three 8K images in one request/, [/Kling 4\.0(?! Flash)/, /Kling 4\.0 Flash/]],
   ]) {
     assert.equal(examples.length, 5);
     assert.match(examples[0], imageSeries);

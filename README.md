@@ -8,7 +8,7 @@ This package uses only the Global Kling MCP endpoint configured in `mcp.json`:
 
 ## Capabilities
 
-- Text-to-image and reference-guided image editing. When no model is specified, use a compatible default image model returned for the current account.
+- [Kling Image 4.0](https://kling.ai/quickstart/kling-image-4-user-guide) supports text-to-image, reference-guided image editing, native 8K, and coherent image series. Use a compatible default image model if unspecified; resolution and per-request count depend on the live MCP capabilities for the account.
 - Kling 4.0 supports text-to-video, image-to-video with first, last, and intermediate keyframes, and Omni-Ref with images, videos, audio, and Elements. It generates 3–30 seconds at 720p, with 1080p available to eligible accounts.
 - Kling 4.0 Flash supports text-to-video, image-to-video from a single first frame, and Omni-Ref with images, videos, and Elements. It generates 3–20 seconds at 720p.
 - Both Omni-Ref models support smart shot splitting and can generate synchronized audio or preserve source video audio. The two audio settings are mutually exclusive.

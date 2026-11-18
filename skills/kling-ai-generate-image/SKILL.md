@@ -1,6 +1,6 @@
 ---
 name: kling-ai-generate-image
-description: Write or refine Kling AI image prompts in WorkBuddy, or generate, edit, repaint, and create controlled variants for posters, products, ads, portraits, and social visuals. For existing tasks, use the core Skill's shared query workflow.
+description: Write or refine Kling AI image prompts in WorkBuddy, or generate images and coherent image series, edit, repaint, and create controlled variants for posters, products, ads, portraits, and social visuals. For existing tasks, use the core Skill's shared query workflow.
 ---
 
 # Kling AI image generation
@@ -25,6 +25,11 @@ Before generation, obtain candidates through [capability discovery](../kling-ai-
 When no model is specified, prefer the current entry point's returned `defaultModel` if it meets the request. When the user explicitly requires the default model, use that model's live capabilities.
 
 For a continuous image series, prefer the available default when it explicitly supports both the series and the requested count. If the user leaves model choice open and the default is unsuitable, select a compatible model from the same entry point. Send a series-mode switch only when the selected model declares one, and use its declared count field. A model's ability to return several images alone does not establish series support. Explain the limitation when no compatible model is available.
+
+## Kling Image 4.0 and image series
+
+- Use Kling Image 4.0 only if `kling-image-v4_0` is returned under the chosen `text_to_image` or `image_to_image` entry point for the current account. Use text-to-image without a reference and image-to-image when references are needed, filling the selected model's required slots.
+- For a series of three 8K images in one request, confirm that the live model supports the combination, then send `story_mode="true"`, `imageCount="3"`, and `img_resolution="8k"` in `arguments[]`. Multiple variants of the same composition stay in regular mode. Use live MCP parameters and count limits for the current account and entry point. Website limits do not establish MCP access. Long-image generation is a separate capability; do not submit a long-image request as a series when that capability is unavailable.
 
 ## Workflow
 
