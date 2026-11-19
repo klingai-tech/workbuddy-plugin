@@ -1,10 +1,35 @@
 # Kling AI Global for WorkBuddy
 
-Kling AI connects WorkBuddy to the official OAuth-protected Kling MCP service
-for image and video creation, reusable subject management, and motion-library browsing.
+Use Kling AI in a WorkBuddy chat to generate images and videos, track your tasks, and reuse assets from your subject and motion libraries.
 
-This package uses only the Global Kling MCP endpoint configured in `mcp.json`:
-`https://kling.ai/mcp/plugin`.
+The `global` branch is for Kling accounts that sign in at **kling.ai**. It connects to `https://kling.ai/mcp/plugin`. For the China edition, see the [`main` branch](https://github.com/klingai-tech/workbuddy-plugin/tree/main).
+
+## Quick start
+
+1. **Open the connector in WorkBuddy.** On the integration page, select **Open in WorkBuddy** and allow your browser to launch the desktop app. [Kling AI for WorkBuddy](https://www.workbuddy.ai/integrations/kling)
+2. **Connect your Kling account.** Select **Connect**, sign in to your kling.ai account in the browser, and approve access. Return to WorkBuddy after authorization. WorkBuddy handles OAuth and token refresh automatically.
+3. **Check the connection.** In a WorkBuddy chat, ask “Use Kling AI to check my remaining credits.” Once WorkBuddy shows your balance, try one of the prompts below.
+
+For the full setup guide, see the [official Kling MCP & CLI guide (Global)](https://kling.ai/app/mcp/guide).
+
+## Try these prompts
+
+Send any of these prompts in a WorkBuddy chat. For image-to-video, attach the reference image to the same message. Generation uses credits from your connected Kling account. Available models and settings depend on that account.
+
+| What you want to do | Prompt to send |
+| --- | --- |
+| Generate an image | Use Kling AI to generate one square product photo of a white coffee mug on a light wood table, with morning light coming from the left. |
+| Generate a video from text | Use Kling AI to make a 5-second landscape video of a neon-lit street after rain, with a low camera slowly moving forward. |
+| Animate an image | Use my attached product photo as the first frame of a 5-second Kling AI video. Slowly orbit the product. |
+| Browse your subjects | Use Kling AI to list my saved Elements by name. |
+| Preview motions | Use Kling AI to preview the motions saved in my motion library. |
+
+## Find results and fix common issues
+
+- **Generation is still running.** Check the result card in the chat. If WorkBuddy gives you a task number, ask “Use Kling AI to check task `<task number>` and show me the result.”
+- **The result link expired.** Look up the original task number for a fresh link, or sign in to the same Kling account and check its generation history.
+- **You are out of credits.** Recharge on the Kling site with the same account, then return to the original chat and say “Continue the previous task.” WorkBuddy checks the original task first if it was already submitted.
+- **Authorization failed or you need to switch accounts.** Disconnect Kling AI in WorkBuddy and authorize again with the account for this region. If you switch regions, use the connector for that region.
 
 ## Capabilities
 
@@ -17,41 +42,6 @@ This package uses only the Global Kling MCP endpoint configured in `mcp.json`:
 - Two-step local asset upload when supported by the current Global MCP and host
 - Credit and task-status queries
 - Generation progress tracking and result delivery
-
-## Connect
-
-Install the connector from WorkBuddy, choose **Connect**, and complete the Kling
-OAuth flow in the browser. WorkBuddy manages authorization and refresh; no API
-key is required.
-
-To switch accounts or regions, disconnect the current account before installing
-and connecting the intended package. Never paste credentials, tokens, or cookies
-into a conversation.
-
-## Use
-
-Describe the image or video you want in natural language. When no model is
-specified, prefer Kling Image 4.0 for images if it is available and fits the
-request. For video, prefer a compatible Kling 4.0 model returned for the current
-account under `omni_ref_video`. Use a compatible available default if none is suitable.
-Each authorized generation step is submitted once. A working result
-widget refreshes progress; otherwise Kling AI checks at service-allowed
-intervals until success or failure. If the current turn ends first, it returns
-a **task number** that can be used to query the same task later.
-
-If credits are insufficient, sign in to the same account on the official Kling
-site to recharge. Then return to this conversation and say "Continue the previous
-task." WorkBuddy checks an existing task first and checks credits before any new
-submission. Completed results include the primary image, video, or result link supplied by Kling.
-Temporary result links can be refreshed by querying the original task number;
-the work also remains available in the authorized account's Kling generation
-history.
-
-Try "Save these front and side views as my first reusable character, Alice",
-"List my subject library", or "Browse my saved motions, then apply the one I select
-to this subject image". Browsing libraries only reads assets; applying a subject
-or motion to generation creates a paid task. Available tools and models depend
-on the current account and live Global capabilities.
 
 ## License
 
