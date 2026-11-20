@@ -21,6 +21,7 @@ Send any of these prompts in a WorkBuddy chat. For image-to-video, attach the re
 | Generate an image | Use Kling AI to generate one square product photo of a white coffee mug on a light wood table, with morning light coming from the left. |
 | Generate a video from text | Use Kling AI to make a 5-second landscape video of a neon-lit street after rain, with a low camera slowly moving forward. |
 | Animate an image | Use my attached product photo as the first frame of a 5-second Kling AI video. Slowly orbit the product. |
+| Generate an HDR video | Use Kling 4.0 to generate a 5-second HDR video at 1080p. Neon lights reflect on a rain-soaked street as the camera slowly moves forward along the road. |
 | Browse your subjects | Use Kling AI to list my saved Elements by name. |
 | Preview motions | Use Kling AI to preview the motions saved in my motion library. |
 
@@ -34,7 +35,7 @@ Send any of these prompts in a WorkBuddy chat. For image-to-video, attach the re
 ## Capabilities
 
 - [Kling Image 4.0](https://kling.ai/quickstart/kling-image-4-user-guide) supports text-to-image, reference-guided image editing, native 8K, and coherent image series. When no model is specified, prefer Kling Image 4.0 if it is available and fits the request. Resolution and per-request count depend on the live MCP capabilities for the account.
-- Kling 4.0 supports text-to-video, image-to-video with first, last, and intermediate keyframes, and Omni-Ref with images, videos, audio, and Elements. It generates 3–30 seconds at 720p, with 1080p available to eligible accounts.
+- Kling 4.0 supports text-to-video, image-to-video with first, last, and intermediate keyframes, and Omni-Ref with images, videos, audio, and Elements. It generates 3–30 seconds at 720p, with 1080p and 4K available to eligible accounts. HDR output at 1080p or 4K depends on the connected account and generation mode.
 - Kling 4.0 Flash supports text-to-video, image-to-video from a single first frame, and Omni-Ref with images, videos, and Elements. It generates 3–20 seconds at 720p.
 - Both Omni-Ref models support smart shot splitting and can generate synchronized audio or preserve source video audio. The two audio settings are mutually exclusive.
 - Subject library (Elements): create, browse, inspect, update, delete, and reuse subjects

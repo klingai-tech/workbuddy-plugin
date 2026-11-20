@@ -1,6 +1,6 @@
 ---
 name: kling-ai-generate-video
-description: Write Kling AI video prompts or storyboards in WorkBuddy, request missing assets, prepare final generation settings, or run text-to-video, image-to-video, omni references, keyframes, and motion control. Use the shared lifecycle for existing tasks.
+description: Write Kling AI video prompts or storyboards in WorkBuddy, request missing assets, prepare final generation settings including HDR, or run text-to-video, image-to-video, omni references, keyframes, and motion control. Use the shared lifecycle for existing tasks.
 ---
 
 # Kling AI video generation
@@ -11,7 +11,7 @@ Use live tools and models from `kling-ai-plugin` in this package's `mcp.json`. I
 | --- | --- |
 | Prompt or storyboard only | Use [motion and shot planning](references/motion-and-shots.md) and finish with the creative text. This step needs no account query, model selection, upload, or invitation to generate |
 | Required asset is missing | Ask only for the asset and explain its role, such as a product photo needed as the first frame. Prepare settings after the asset is supplied |
-| Final settings only | Discover compatible pairs. Present the mode, model, prompt summary, duration, resolution, ratio, count, shot structure, reference roles, and required billing disclosure. Wait for approval |
+| Final settings only | Discover compatible pairs. Present the mode, model, prompt summary, duration, resolution, requested dynamic range (HDR or SDR), ratio, count, shot structure, reference roles, and required billing disclosure. Wait for approval |
 | Authorized generation | Follow the workflow and submit once under the existing authorization |
 | Existing task | Use the known task number and follow [task results](../kling-ai-plugin/references/task-results.md) |
 
@@ -33,11 +33,11 @@ Include `omni_ref_video` among the candidates for ordinary text-to-video, image-
 
 ## Workflow
 
-1. Capture model restrictions, reference roles, sound, duration, ratio, resolution, count, and shot requirements. Filter live tool/model pairs against those requirements before ranking them. Use the module table for the selected pair.
+1. Capture model restrictions, reference roles, sound, duration, ratio, resolution, dynamic range (HDR or SDR), count, and shot requirements. Filter live tool/model pairs against those requirements before ranking them. Use the module table for the selected pair.
 2. Read [motion and shot planning](references/motion-and-shots.md) for every new generation, edit, or variant. Use a motion profile to check an existing prompt or guide a new one. Only read-only queries and authorized retries with unchanged parameters may skip it. Add [scene patterns](references/scene-patterns.md) when products, UGC, explainers, multi-shot stories, or social formats need further decisions.
 3. Internally establish intended use, protected subjects, and target action. Ask only about blocking assets/dialogue or conflicting requirements; choose ordinary camera movement, lighting, and unspecified options reasonably instead of requiring a questionnaire.
 4. Reuse a sufficient prompt verbatim. Make only necessary local edits or write a new motion-centered prompt as needed. When needed, express abstract quality requirements through visible details such as lighting, materials, depth, and composition. Upload assets when needed after selection. Stop preparing the request if upload fails.
-5. Check actual arguments against the request, especially the top-level `model`, required prompt, and first-frame slot. For an explicit specification such as `1080p`, verify the resolution enum and its conditions for the selected tool and model. For settings-only requests, present the proposal and finish. For authorized generation, check credits, submit once through the shared workflow, and follow task results. Do not generate comparison samples automatically or create an unrequested final version after a preview.
+5. Check actual arguments against the request, especially the top-level `model`, required prompt, and first-frame slot. For an explicit resolution or dynamic range, verify the selected tool/model pair's enums and combination rules. Use [HDR video output](../kling-ai-plugin/references/model-parameters.md#hdr-video-output) to validate HDR settings. For settings-only requests, present the proposal and finish. For authorized generation, check credits, submit once through the shared workflow, and follow task results. Do not generate comparison samples automatically or create an unrequested final version after a preview.
 
 ## Creative constraints
 

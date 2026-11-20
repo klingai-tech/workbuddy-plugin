@@ -14,6 +14,8 @@ Text-only omni requires a model that permits no media input. Keyframes require m
 
 For required silence, filter out pairs without a declared way to turn sound off or an explicit silent-output guarantee. Check generated sound and preserved source audio. An entry-point name, a missing sound field, or “silent” in the prompt cannot establish silent output.
 
+For required HDR, consider only pairs that declare HDR with a compatible 1080p or 4K resolution. Check the live account response for each candidate entry point, including text-to-video, image-to-video, and Omni-Ref where applicable. Kling 4.0 Flash offers 720p SDR. Apply the [HDR video output rules](../../kling-ai-plugin/references/model-parameters.md#hdr-video-output) after selection.
+
 After selecting a pair, use the [parameter module table](../../kling-ai-plugin/references/model-parameters.md) for specifications, references, and sound.
 
 ## Elements and audio inputs

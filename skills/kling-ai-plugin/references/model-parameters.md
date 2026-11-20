@@ -16,6 +16,12 @@ When smart shot splitting only allows `true`, follow the live schema and default
 
 Minimal loading never permits skipping required fields or cross-field dependencies.
 
+## HDR video output
+
+- For requested HDR, confirm that the selected pair declares the `hdr` argument and the `hdr` value. Include `{"name": "hdr", "value": "hdr"}` in `arguments` and explicitly set `resolution` to a compatible live value of `1080p` or `4k`. Prefer 1080p when the user leaves resolution open and the account supports it.
+- When dynamic range is unspecified, keep the declared default. A default of `none` leaves HDR off. For explicit SDR, use the declared off value or verify fixed SDR output. Lighting and contrast cues describe visual style. The `hdr` argument controls the file's dynamic range.
+- If the user requests HDR at 720p or the requested model cannot deliver HDR at the requested resolution, explain the conflict and get approval for compatible settings before submission.
+
 ## Load only applicable modules
 
 Load a module only when the selected model declares the capability and this request needs it. A tool's existence or generic description is insufficient. Always validate required inputs, dependencies, and conditional caps, even if the user did not name them.
